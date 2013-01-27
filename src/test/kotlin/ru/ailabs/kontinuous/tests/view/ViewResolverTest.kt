@@ -2,6 +2,7 @@ package ru.ailabs.kontinuous.tests.view
 
 import ru.ailabs.kontinuous.view.ViewResolver
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * Alien Invaders Ltd.
@@ -13,7 +14,8 @@ import org.junit.Test
 class ViewResolverTest {
     Test fun shouldReturnText() {
         val viewResolver = ViewResolver()
+        val name = "Aleksandr Khamutov"
 
-        println(viewResolver.resolveView(hashMapOf("name" to "Aleksandr Khamutov"), "views/hello/index.vm"))
+        assertEquals("Hello ${name}!", viewResolver.resolveView(hashMapOf("name" to name), "views/hello/index.vm"))
     }
 }
