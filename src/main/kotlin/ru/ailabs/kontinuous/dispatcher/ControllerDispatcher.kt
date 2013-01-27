@@ -14,8 +14,11 @@ import org.reflections.Reflections
 import ru.ailabs.kontinuous.annotation.AnnotationUtils
 import ru.ailabs.kontinuous.annotation.path
 import ru.ailabs.kontinuous.controller.Action
+import ru.ailabs.kontinuous.view.ViewResolver
 
 class ControllerDispatcher() {
+
+    val viewResolver = ViewResolver()
 
     val routes = HashMap<String, Action>();
     {
@@ -35,7 +38,8 @@ class ControllerDispatcher() {
     fun dispatch(val url: String): String {
         val method = routes.get(url)
         return if (method != null) {
-            return method.handle("").component1().get("name") as String
+            val answer = method.handle("")
+            return viewResolver.resolveView(answer.component1(), answer.component2())
         }
         else "No route found"
     }

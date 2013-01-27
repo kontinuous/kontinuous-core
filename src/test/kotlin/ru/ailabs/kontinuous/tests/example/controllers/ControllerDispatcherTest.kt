@@ -20,11 +20,11 @@ import ru.ailabs.kontinuous.controller.Action
 
 object Controller {
     val index =  Action ({
-        Pair(hashMapOf("name" to "Hello Index"), "indexView")
+        Pair(hashMapOf("name" to "index"), "views/hello/index.vm")
     })
 
     val post = Action ({
-        Pair(hashMapOf("name" to "Hello from post"), "postView")
+        Pair(hashMapOf("name" to "post"), "views/hello/index.vm")
     })
 }
 
@@ -39,8 +39,8 @@ class ControllerDispatcherTest {
     val dispatcher = ControllerDispatcher();
 
     Test fun rightPath() : Unit {
-        assertEquals("Hello Index", dispatcher.dispatch("/"))
-        assertEquals("Hello from post", dispatcher.dispatch("/post"))
+        assertEquals("Hello index!", dispatcher.dispatch("/"))
+        assertEquals("Hello post!", dispatcher.dispatch("/post"))
     }
 
     Test fun invalidPath() : Unit {
