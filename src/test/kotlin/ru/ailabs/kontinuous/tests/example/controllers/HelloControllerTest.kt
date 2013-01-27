@@ -2,7 +2,6 @@ package ru.ailabs.kontinuous.tests.example.controllers
 
 import org.junit.Test
 import example.controllers.HelloController
-import ru.ailabs.kontinuous.annotations.controller
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertEquals
