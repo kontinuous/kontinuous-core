@@ -6,12 +6,12 @@ import org.eclipse.jetty.servlet.ServletHolder
 
 fun main(args : Array<String>) {
 
-    var server : Server = Server(8060)
+    var server : Server = Server(8090)
     var context : ServletContextHandler = ServletContextHandler(ServletContextHandler.SESSIONS)
     context.setContextPath("/")
     server.setHandler(context)
     var servlet : Servlet? = Servlet()
-    context.addServlet(ServletHolder(servlet), "/hello")
+    context.addServlet(ServletHolder(servlet), "/*")
     server.start()
     server.join()
 }
