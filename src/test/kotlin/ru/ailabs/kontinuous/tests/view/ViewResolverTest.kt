@@ -14,6 +14,6 @@ class ViewResolverTest {
     Test fun shouldReturnText() {
         val viewResolver = ViewResolver()
 
-        println(viewResolver.resolveView(hashMapOf("name" to "Aleksandr Khamutov"), "testTemplate"))
+        println(viewResolver.resolveView(hashMapOf("name" to "Aleksandr Khamutov"), "views/hello/index.vm"))
     }
 }

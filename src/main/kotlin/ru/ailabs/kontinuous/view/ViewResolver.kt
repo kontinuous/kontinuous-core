@@ -21,7 +21,7 @@ class ViewResolver {
         Velocity.init(props)
         val context = VelocityContext(params)
 
-        val template = Velocity.getTemplate("views/hello/index.vm");
+        val template = Velocity.getTemplate(viewName);
         val sw = StringWriter();
 
         template?.merge( context, sw );
