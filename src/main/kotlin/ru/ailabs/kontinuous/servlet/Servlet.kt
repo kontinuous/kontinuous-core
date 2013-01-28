@@ -1,4 +1,4 @@
-package ru.ailabs.kontinuous.servletkotlin
+package ru.ailabs.kontinuous.servlet
 
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -13,7 +13,7 @@ import ru.ailabs.kontinuous.dispatcher.ControllerDispatcher
  * To change this template use File | Settings | File Templates.
  */
 public open class Servlet() : HttpServlet() {
-    private var greeting : String? = "Hello mad World!!!"
+    private var greeting = "Hello mad World!!!"
     protected override fun doGet(request : HttpServletRequest?, response : HttpServletResponse?) : Unit {
 
         var dispather: ControllerDispatcher = ControllerDispatcher()
