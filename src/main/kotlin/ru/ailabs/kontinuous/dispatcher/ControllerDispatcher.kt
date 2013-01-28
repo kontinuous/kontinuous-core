@@ -24,7 +24,7 @@ class ControllerDispatcher() {
     {
         for (cls in AnnotationUtils.findRoutesClasses()!!.toCollection()) {
             val inst = cls!!.newInstance();
-            for (fld in cls!!.getDeclaredFields()) {
+            for (fld in cls.getDeclaredFields()) {
                 for (ann in fld.getAnnotations()) {
                     if (ann is path) {
                         fld.setAccessible(true)

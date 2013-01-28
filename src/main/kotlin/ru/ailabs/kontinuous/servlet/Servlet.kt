@@ -14,15 +14,15 @@ import ru.ailabs.kontinuous.dispatcher.ControllerDispatcher
  */
 public open class Servlet() : HttpServlet() {
     private var greeting = "Hello mad World!!!"
-    protected override fun doGet(request : HttpServletRequest?, response : HttpServletResponse?) : Unit {
+    protected override fun doGet(req : HttpServletRequest?, resp : HttpServletResponse?) : Unit {
 
         var dispather: ControllerDispatcher = ControllerDispatcher()
-        var path : String = dispather.dispatch(request?.getRequestURI()!!)
-        response?.setContentType("text/html")
-        response?.setStatus(HttpServletResponse.SC_OK)
-        response?.getWriter()?.println("<h1>" + path + "</h1>")
-        response?.getWriter()?.println("1111session=" + request?.getSession(true)?.getId())
-        response?.getWriter()?.println("context path = [" + request?.getRequestURI() + "]")
+        var path : String = dispather.dispatch(req?.getRequestURI()!!)
+        resp?.setContentType("text/html")
+        resp?.setStatus(HttpServletResponse.SC_OK)
+        resp?.getWriter()?.println("<h1>" + path + "</h1>")
+        resp?.getWriter()?.println("1111session=" + req?.getSession(true)?.getId())
+        resp?.getWriter()?.println("context path = [" + req?.getRequestURI() + "]")
     }
 
 }
