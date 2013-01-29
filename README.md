@@ -2,6 +2,7 @@
 ===============
 
 Kontinuous is a web framework inspired by first-class frameworks like Play!, Ruby on Rails and Grails.
+Kontinuous has been written on Kotlin (http://kotlin.jetbrains.org/).
 
 ## Licence
 
