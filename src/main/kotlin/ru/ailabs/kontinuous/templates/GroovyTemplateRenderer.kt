@@ -1,5 +1,7 @@
 package ru.ailabs.kontinuous.templates
 
+import groovy.text.SimpleTemplateEngine
+
 /**
  * Alien Invaders Ltd.
  * User: Aleksandr Khamutov
@@ -9,6 +11,8 @@ package ru.ailabs.kontinuous.templates
 object GroovyTemplateRenderer {
 
     fun render(groovyTemplate : String, templateParam : Map<String, *>) : String {
-        return groovyTemplate
+        val engine = SimpleTemplateEngine()
+        val template = engine.createTemplate(groovyTemplate)?.make(templateParam)
+        return template.toString()
     }
 }
