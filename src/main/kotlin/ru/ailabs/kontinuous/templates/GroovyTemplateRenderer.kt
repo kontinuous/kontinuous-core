@@ -10,7 +10,7 @@ import java.util.HashMap
  * Date: 1/29/13
  * Time: 11:03 PM
  */
-object GroovyTemplateRenderer {
+class GroovyTemplateRenderer {
 
     fun render(groovyTemplate: String, templateParam: Map<String, Any>): String {
         val engine = SimpleTemplateEngine()

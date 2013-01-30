@@ -20,11 +20,11 @@ import ru.ailabs.kontinuous.controller.Action
 
 object Controller {
     val index =  Action ({
-        Pair(hashMapOf("name" to "index"), "views/hello/index.vm")
+        Pair(hashMapOf("name" to "index"), "views/hello/index.tmpl.html")
     })
 
     val post = Action ({
-        Pair(hashMapOf("name" to "post"), "views/hello/index.vm")
+        Pair(hashMapOf("name" to "post"), "views/hello/index.tmpl.html")
     })
 }
 
