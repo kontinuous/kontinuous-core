@@ -11,11 +11,15 @@ import java.util.HashMap
  * Date: 1/29/13
  * Time: 10:45 PM
  */
+fun capitalize(value: String): String  {
+    return value.capitalize();
+}
+
 class GroovyTemplateTest {
     Test fun verifyRendering() {
         val groovyTemplate = "Hello \${name}"
 
-        val templateParam: Map<String, *> = hashMapOf("name" to "Kontinuous")
+        val templateParam: Map<String, Any> = hashMapOf("name" to "Kontinuous")
 
         val out = GroovyTemplateRenderer.render(groovyTemplate, templateParam)
 
@@ -31,7 +35,7 @@ class GroovyTemplateTest {
     Test fun verifyJavaStaticImports() {
         val groovyTemplate = "<% import static ru.ailabs.kontinuous.tests.templates.StaticHelper.capitalize %>Hello \${capitalize(name)}"
 
-        val templateParam: Map<String, *> = hashMapOf("name" to "kontinuous")
+        val templateParam: Map<String, Any> = hashMapOf("name" to "kontinuous")
 
         val out = GroovyTemplateRenderer.render(groovyTemplate, templateParam)
 
@@ -41,27 +45,53 @@ class GroovyTemplateTest {
     Test fun verifyKotlinObjectImport() {
         val groovyTemplate = "<% import static ru.ailabs.kontinuous.tests.templates.GroovyTemplateTest.TemplateHelper.\$instance as helper %>Hello \${helper.capitalize(name)}"
 
-        val templateParam: Map<String, *> = hashMapOf("name" to "kontinuous")
+        val templateParam: Map<String, Any> = hashMapOf("name" to "kontinuous")
 
         val out = GroovyTemplateRenderer.render(groovyTemplate, templateParam)
 
         assertEquals("Hello Kontinuous", out)
     }
 
+    Test fun verifyKotlinFunctionImport() {
+        val groovyTemplate = "<% import static ru.ailabs.kontinuous.tests.templates.namespace.capitalize %>Hello \${capitalize(name)}"
+
+        val templateParam: Map<String, Any> = hashMapOf("name" to "kontinuous")
+
+        val out = GroovyTemplateRenderer.render(groovyTemplate, templateParam)
+        assertEquals("Hello Kontinuous", out)
+    }
+
     Test fun renderWithLayout() {
-        val layout = "outer text \${content}"
-        val template = "inner text \${name}"
+        val templateParam : Map<String, Any> = hashMapOf("name" to "kontinuous")
 
-        val templateParam : Map<String, *> = hashMapOf("name" to "kontinuous")
+        val templateRendered = GroovyTemplateRenderer.renderWithLayout("views/hello/inner.tmpl.html", "views/hello/hello_layout.tmpl.html", templateParam)
 
-        val templateRendered = GroovyTemplateRenderer.render(template, templateParam)
-        val layoutParam = HashMap<String, Any>()
-        for((key, value) in templateParam) {
-            layoutParam.put(key, value!!)
-        }
-        layoutParam.put("content", templateRendered.toString())
-        val out = GroovyTemplateRenderer.render(layout, layoutParam)
+        val expectedResult = """<html>
+  <head>
+    <title>Default title</title>
+  </head>
+  <body>
+  hello kontinuous
+  </body>
+</html>"""
 
-        assertEquals("outer text inner text kontinuous", out)
+        assertEquals(expectedResult, templateRendered)
+    }
+
+    Test fun renderWithLayoutAndLayoutArgs() {
+        val templateParam : Map<String, Any> = hashMapOf("name" to "kontinuous", "title" to "Custom title")
+
+        val templateRendered = GroovyTemplateRenderer.renderWithLayout("views/hello/inner.tmpl.html", "views/hello/hello_layout.tmpl.html", templateParam)
+
+        val expectedResult = """<html>
+  <head>
+    <title>Custom title</title>
+  </head>
+  <body>
+  hello kontinuous
+  </body>
+</html>"""
+
+        assertEquals(expectedResult, templateRendered)
     }
 }
