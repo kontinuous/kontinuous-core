@@ -3,7 +3,7 @@ package ru.ailabs.kontinuous.servlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import ru.ailabs.kontinuous.dispatcher.ControllerDispatcher
+import ru.ailabs.kontinuous.controller.ControllerDispatcher
 
 /**
  * Created with IntelliJ IDEA.
