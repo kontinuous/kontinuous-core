@@ -3,6 +3,7 @@ package ru.ailabs.kontinuous.tests.templates
 import org.junit.Test
 import kotlin.test.assertEquals
 import ru.ailabs.kontinuous.templates.GroovyTemplateRenderer
+import java.util.HashMap
 
 /**
  * Alien Invaders Ltd.
@@ -45,5 +46,22 @@ class GroovyTemplateTest {
         val out = GroovyTemplateRenderer.render(groovyTemplate, templateParam)
 
         assertEquals("Hello Kontinuous", out)
+    }
+
+    Test fun renderWithLayout() {
+        val layout = "outer text \${content}"
+        val template = "inner text \${name}"
+
+        val templateParam : Map<String, *> = hashMapOf("name" to "kontinuous")
+
+        val templateRendered = GroovyTemplateRenderer.render(template, templateParam)
+        val layoutParam = HashMap<String, Any>()
+        for((key, value) in templateParam) {
+            layoutParam.put(key, value!!)
+        }
+        layoutParam.put("content", templateRendered.toString())
+        val out = GroovyTemplateRenderer.render(layout, layoutParam)
+
+        assertEquals("outer text inner text kontinuous", out)
     }
 }
