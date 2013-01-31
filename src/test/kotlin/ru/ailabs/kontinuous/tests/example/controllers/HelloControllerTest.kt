@@ -5,7 +5,13 @@ import example.controllers.HelloController
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertEquals
+import ru.ailabs.kontinuous.controller.Action
 
+object HelloController {
+    val index = Action ({
+        Pair(hashMapOf("name" to "Alex Khamutov"), "indexView")
+    })
+}
 
 /**
  * Alien Invaders Ltd.
