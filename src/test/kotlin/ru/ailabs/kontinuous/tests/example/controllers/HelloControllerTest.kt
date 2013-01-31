@@ -1,12 +1,17 @@
 package ru.ailabs.kontinuous.tests.example.controllers
 
 import org.junit.Test
-import example.controllers.HelloController
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertEquals
 import ru.ailabs.kontinuous.controller.Context
+import ru.ailabs.kontinuous.controller.Action
 
+object HelloController {
+    val index = Action ({
+        Pair(hashMapOf("name" to "Alex Khamutov"), "indexView")
+    })
+}
 
 /**
  * Alien Invaders Ltd.
@@ -18,11 +23,11 @@ class ControllerTest {
     Test fun controllerShouldReturnPair() {
         val action = HelloController.index
         assertNotNull(action)
-        assertTrue(action.handle(Context(hashMapOf())) is Pair<Map<String, *>, String>)
+        assertTrue(action.handler(Context(hashMapOf())) is Pair<Map<String, *>, String>)
     }
 
     Test fun controllerShouldReturnView() {
-        val response = HelloController.index.handle(Context(hashMapOf()))
+        val response = HelloController.index.handler(Context(hashMapOf()))
         assertEquals("indexView" , response.component2())
     }
 }

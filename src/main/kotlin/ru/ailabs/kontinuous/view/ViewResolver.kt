@@ -4,6 +4,7 @@ import org.apache.velocity.app.Velocity
 import org.apache.velocity.VelocityContext
 import java.io.StringWriter
 import java.util.Properties
+import ru.ailabs.kontinuous.templates.GroovyTemplateRenderer
 
 /**
  * Alien Invaders Ltd.
@@ -13,19 +14,16 @@ import java.util.Properties
  */
 class ViewResolver {
 
-    fun resolveView(params: Map<String, *>, viewName: String) : String {
-        val props = Properties()
-        props.setProperty("resource.loader", "class")
-        props.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader")
+    var defaultLayout = "view/layout/application.tmpl.html"
 
-        Velocity.init(props)
-        val context = VelocityContext(params)
+    fun resolveView(params: Map<String, Any>, viewName: String) : String {
 
-        val template = Velocity.getTemplate(viewName);
-        val sw = StringWriter();
+        val renderer = GroovyTemplateRenderer()
 
-        template?.merge( context, sw );
+        if(this.javaClass.getClassLoader()!!.getResourceAsStream(defaultLayout) != null) {
+            return renderer.renderWithLayout(viewName, defaultLayout, params)
+        }
 
-        return sw.toString()
+        return renderer.renderTemplateFile(viewName, params)
     }
 }
