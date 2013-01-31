@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 import junit.framework.TestCase
 import ru.ailabs.kontinuous.annotation.path
 import ru.ailabs.kontinuous.annotation.routes
-import ru.ailabs.kontinuous.dispatcher.ControllerDispatcher
+import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import org.junit.Test
 import ru.ailabs.kontinuous.controller.Action
 
@@ -26,12 +26,17 @@ object Controller {
     val post = Action ({
         Pair(hashMapOf("name" to "post"), "views/hello/index.vm")
     })
+
+    val show_post = Action ({ context ->
+        Pair(context.namedParameters, "views/hello/index.vm")
+    })
 }
 
 routes class Routes {
 
     path("/")  val index = Controller.index
     path("/post")  val post = Controller.post
+    path("/post/:name")  val show_post = Controller.show_post
 }
 
 class ControllerDispatcherTest {
@@ -46,4 +51,9 @@ class ControllerDispatcherTest {
     Test fun invalidPath() : Unit {
         assertEquals("No route found", dispatcher.dispatch("/asd"))
     }
+
+    Test fun withParams() : Unit {
+        assertEquals("Hello megapost!", dispatcher.dispatch("/post/megapost"))
+    }
+
 }
