@@ -39,7 +39,7 @@ class ControllerDispatcher() {
     fun dispatch(val url: String): String {
         val pair = routes find { it -> it.first.match(url).first }
         return if (pair != null) {
-            val answer = pair.second.handle(Context(pair.first.match(url).second!!))
+            val answer = pair.second.handle(Context(pair.first.match(url).second))
             return viewResolver.resolveView(answer.component1(), answer.component2())
         }
         else "No route found"

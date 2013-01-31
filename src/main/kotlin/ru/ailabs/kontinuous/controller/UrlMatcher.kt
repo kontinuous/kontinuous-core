@@ -15,24 +15,24 @@ import java.util.HashMap
 
 class UrlMatcher(val urlTemplate : String) {
 
-    fun match(val url : String) : Pair<Boolean, Map<String, String>? > {
+    fun match(val url : String) : Pair<Boolean, Map<String, String> > {
         val result = HashMap<String, String>()
         var matcher = Pattern.compile("(?<=\\/)\\:[^\\\\s\\/\\:]+(?=\\/|$)").matcher(urlTemplate)
         val params = ArrayList<String>()
         while (matcher.find()) {
-            println("Param: " + matcher.group())
+//            println("Param: " + matcher.group())
             params.add(matcher.group().substring(1))
         }
         val paramsPattern = matcher.replaceAll("([^\\\\s\\/\\:]+)")
         matcher = Pattern.compile(paramsPattern).matcher(url)
         val it = params.iterator();
         if(!matcher.find() || !matcher.group().equals(url)){
-            return Pair(false, null)
+            return Pair(false, result)
         } else {
-            println("Url: " + matcher.group())
+//            println("Url: " + matcher.group())
             var i = 1
             while(i <= matcher.groupCount()) {
-                println("Value: " + matcher.group(i))
+//                println("Value: " + matcher.group(i))
                 result.put(it.next(), matcher.group(i++)!!)
             }
         }
