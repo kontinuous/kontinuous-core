@@ -11,11 +11,11 @@ package ru.ailabs.kontinuous.controller
 import javax.servlet.http.HttpServletRequest
 import java.util.HashMap
 import org.reflections.Reflections
-import ru.ailabs.kontinuous.annotation.AnnotationUtils
 import ru.ailabs.kontinuous.annotation.path
 import ru.ailabs.kontinuous.controller.Action
 import ru.ailabs.kontinuous.view.ViewResolver
 import java.util.HashSet
+import ru.ailabs.kontinuous.annotation.routes
 
 class ControllerDispatcher() {
 
@@ -23,7 +23,7 @@ class ControllerDispatcher() {
 
     val routes = HashSet<Pair<UrlMatcher, Action>>();
     {
-        for (cls in AnnotationUtils.findRoutesClasses()!!.toCollection()) {
+        for (cls in scanForRoutes()!!.toCollection()) {
             val inst = cls!!.newInstance();
             for (fld in cls.getDeclaredFields()) {
                 for (ann in fld.getAnnotations()) {
@@ -34,6 +34,10 @@ class ControllerDispatcher() {
                 }
             }
         }
+    }
+
+    fun scanForRoutes(): jet.MutableSet<java.lang.Class<out jet.Any?>?>? {
+        return Reflections("").getTypesAnnotatedWith(javaClass<routes>())
     }
 
     fun dispatch(val url: String): String {
