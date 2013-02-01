@@ -17,12 +17,12 @@ class UrlMatcher(val urlTemplate : String) {
     fun match(val url : String) : Pair<Boolean, Map<String, String> > {
         val result = HashMap<String, String>()
 
-        var matcher = Pattern.compile("(?<=\\/)\\:[^\\\\s\\/\\:]+(?=\\/|$)").matcher(urlTemplate)
+        var matcher = Pattern.compile("""(?<=\/)\:[^\s\/\:]+(?=\/|$)""").matcher(urlTemplate)
         val params = ArrayList<String>()
         while (matcher.find()) {
             params.add(matcher.group().substring(1))
         }
-        val paramsPattern = matcher.replaceAll("([^\\\\s\\/\\:]+)")
+        val paramsPattern = matcher.replaceAll("""([^\s\/\:]+)""")
         matcher = Pattern.compile(paramsPattern).matcher(url)
         val it = params.iterator();
         val matched = matcher.find() && matcher.group().equals(url)

@@ -49,4 +49,13 @@ class UrlMatcherTest {
         assertEquals(true, result.second.containsKey("app") )
         assertEquals("1", result.second.get("app") )
     }
+
+    Test fun urlWithSParam() : Unit {
+        val matcher = UrlMatcher("/path/to/entity/:post")
+        val result = matcher.match("/path/to/entity/100")
+        assertEquals(true, result.first)
+        assertEquals(false, result.second.isEmpty() )
+        assertEquals(true, result.second.containsKey("post") )
+        assertEquals("100", result.second.get("post") )
+    }
 }
