@@ -39,7 +39,7 @@ class GroovyTemplateRenderer {
 
         val layoutParam = HashMap<String, Any>()
         for((key, value) in templateParam) {
-            layoutParam.put(key, value!!)
+            layoutParam.put(key, value)
         }
 
         layoutParam.put("content", templateRendered.toString())
