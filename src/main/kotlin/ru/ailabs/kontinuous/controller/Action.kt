@@ -8,3 +8,5 @@ package ru.ailabs.kontinuous.controller
  */
 public open class Action(public val handler: (Context) -> Pair<Map<String, Any>, String>) {
 }
+
+class ActionHandler(val action: Action, val namedParams: Map<String, String>)

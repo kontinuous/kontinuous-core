@@ -24,6 +24,7 @@ import java.util.Set
 import org.jboss.netty.handler.codec.http.CookieEncoder
 import org.jboss.netty.channel.ChannelFuture
 import org.jboss.netty.channel.ChannelFutureListener
+import ru.ailabs.kontinuous.controller.ControllerDispatcher
 
 /**
  * Alien Invaders Ltd.
@@ -34,6 +35,8 @@ import org.jboss.netty.channel.ChannelFutureListener
 class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.server.KontinuousHttpHandler")
+
+    val dispatcher = ControllerDispatcher()
 
     public override fun messageReceived(ctx: ChannelHandlerContext?, e: MessageEvent?) {
         val nettyHttpRequest = e?.getMessage()
@@ -46,10 +49,11 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 val requestUri = QueryStringDecoder(nettyHttpRequest.getUri())
 
                 val requestParams = requestUri.getParameters()
+                val path = requestUri.getPath()
 
                 val headers = nettyHttpRequest.getHeaders()
 
-                writeResponse(e!!, nettyHttpRequest, "keepAlive: ${keepAlive} requestProtocolVersion: ${requestProtocolVersion} requestUri: ${requestUri} requestParams: ${requestParams}")
+                writeResponse(e!!, nettyHttpRequest, "keepAlive: ${keepAlive} requestProtocolVersion: ${requestProtocolVersion} requestUri: ${path} requestParams: ${requestParams} headers: ${headers}")
             }
             else -> {
 

@@ -41,11 +41,24 @@ class ControllerDispatcher() {
     }
 
     fun dispatch(val url: String): String {
-        val pair = routes find { it -> it.first.match(url).first }
-        return if (pair != null) {
-            val answer = pair.second.handler(Context(pair.first.match(url).second))
-            return viewResolver.resolveView(answer.component1(), answer.component2())
+        val actionHandler = findAction(url)
+        val answer = actionHandler.action.handler(Context(actionHandler.namedParams))
+        return viewResolver.resolveView(answer.component1(), answer.component2())
+    }
+
+    private fun findAction(val path: String): ActionHandler {
+        val pair = routes find { it -> it.first.match(path).first }
+
+        return if(pair != null) {
+            val pathNamedParam = pair.first.match(path).second
+            ActionHandler(pair.second, pathNamedParam)
+        } else {
+            ActionHandler(Action404, hashMapOf("path" to path))
         }
-        else "No route found"
+    }
+
+    fun findActionHandler(val requestHeader: RequestHeader): ActionHandler {
+        val path = requestHeader.path
+        return findAction(path)
     }
 }
