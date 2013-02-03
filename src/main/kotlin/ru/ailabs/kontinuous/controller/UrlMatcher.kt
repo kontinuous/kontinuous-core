@@ -22,7 +22,7 @@ class UrlMatcher(val urlTemplate : String) {
         while (matcher.find()) {
             params.add(matcher.group().substring(1))
         }
-        val paramsPattern = matcher.replaceAll("""([^\s\/\:]+)""")
+        val paramsPattern = matcher.replaceAll("""([^\\s\/\:]+)""")
         matcher = Pattern.compile(paramsPattern).matcher(url)
         val it = params.iterator();
         val matched = matcher.find() && matcher.group().equals(url)
