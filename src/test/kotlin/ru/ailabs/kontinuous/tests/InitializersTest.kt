@@ -4,6 +4,8 @@ import kotlin.test.assertEquals
 import org.junit.Test
 import ru.ailabs.kontinuous.annotation.initializers
 import ru.ailabs.kontinuous.initializer.Application
+import ru.ailabs.kontinuous.initializer.InitializersBase
+import ru.ailabs.kontinuous.initializer.Initializer
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,17 +19,17 @@ object ExampleSession {
 
     var session = "Not initialized"
 
-    fun initialize() {
+    fun initalize(val app: Application)  {
         session = "Initialized"
     }
 }
 
 
-initializers class Initializers {
+initializers class AnyInitializers : InitializersBase {
 
-    val initializers = hashSetOf<() -> Unit>(
-            {ExampleSession.initialize()}
-    )
+    override fun init(val app: Application) {
+        ExampleSession.initalize(app)
+    }
 }
 
 class InitializersTest {

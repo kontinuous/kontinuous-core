@@ -21,15 +21,8 @@ class Application {
         }
 
         for (cls in scanForInitializers()!!.toCollection()) {
-//            println("Class: " + cls)
-//            for (m in cls!!.getDeclaredMethods()) {
-//                println("Method: " + m)
-//            }
-            val m = cls!!.getMethod("getInitializers");
-            val set = m!!.invoke(cls.newInstance()) as (Collection<() -> Unit>);
-            for (i in set) {
-                i()
-            }
+            val initializers = cls!!.newInstance() as InitializersBase
+            initializers.init(this)
         }
     }
 
