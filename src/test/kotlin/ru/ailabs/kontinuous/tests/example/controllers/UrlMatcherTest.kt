@@ -58,4 +58,13 @@ class UrlMatcherTest {
         assertEquals(true, result.second.containsKey("post") )
         assertEquals("100", result.second.get("post") )
     }
+
+    Test fun urlWithParam() : Unit {
+        val matcher = UrlMatcher("/post/:name")
+        val result = matcher.match("/post/megapost")
+        assertEquals(true, result.first)
+        assertEquals(false, result.second.isEmpty() )
+        assertEquals(true, result.second.containsKey("name") )
+        assertEquals("megapost", result.second.get("name") )
+    }
 }

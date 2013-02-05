@@ -57,7 +57,7 @@ class GroovyTemplateTest {
     }
 
     Test fun verifyKotlinFunctionImport() {
-        val groovyTemplate = "<% import static ru.ailabs.kontinuous.tests.templates.namespace.capitalize %>Hello \${capitalize(name)}"
+        val groovyTemplate = "<% import static ru.ailabs.kontinuous.tests.templates.TemplatesPackage.capitalize %>Hello \${capitalize(name)}"
 
         val templateParam: Map<String, Any> = hashMapOf("name" to "kontinuous")
 

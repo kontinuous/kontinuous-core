@@ -6,5 +6,7 @@ package ru.ailabs.kontinuous.controller
  * Date: 1/27/13
  * Time: 4:15 PM
  */
-public open class Action(public val handler: (Context) -> Pair<Map<String, Any>, String>) {
+public open class Action(public val handler: (Context) -> SimpleResult) {
 }
+
+class ActionHandler(val action: Action, val namedParams: Map<String, String>)
