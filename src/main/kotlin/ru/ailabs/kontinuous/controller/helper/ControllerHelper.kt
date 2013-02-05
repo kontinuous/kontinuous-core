@@ -1,4 +1,4 @@
-package ru.ailabs.kontinuous.controller
+package ru.ailabs.kontinuous.controller.helper
 
 import ru.ailabs.kontinuous.view.ViewResolver
 
@@ -10,8 +10,8 @@ import ru.ailabs.kontinuous.view.ViewResolver
  */
 object ControllerHelper {
     val viewResolver = ViewResolver()
+}
 
-    fun render(viewName: String, params: Map<String, Any>): String {
-        return viewResolver.resolveView(params, viewName)
-    }
+fun render(viewName: String, params: Map<String, Any> = hashMapOf()): String {
+    return ControllerHelper.viewResolver.resolveView(params, viewName)
 }

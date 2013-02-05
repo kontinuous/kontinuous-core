@@ -15,19 +15,25 @@ import ru.ailabs.kontinuous.annotation.routes
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import org.junit.Test
 import ru.ailabs.kontinuous.controller.Action
+import ru.ailabs.kontinuous.controller.Ok
+import ru.ailabs.kontinuous.controller.helper.render
+import ru.ailabs.kontinuous.controller.RequestHeader
+import org.jboss.netty.handler.codec.http.HttpVersion
+import org.jboss.netty.handler.codec.http.HttpMethod
+import ru.ailabs.kontinuous.controller.Action404
 
 
 object Controller {
     val index =  Action ({
-        Pair(hashMapOf("name" to "index"), "views/hello/index.tmpl.html")
+        Ok(render("Hello index!", hashMapOf()))
     })
 
     val post = Action ({
-        Pair(hashMapOf("name" to "post"), "views/hello/index.tmpl.html")
+        Ok(render("Hello post!", hashMapOf()))
     })
 
     val show_post = Action ({ context ->
-        Pair(context.namedParameters, "views/hello/index.tmpl.html")
+        Ok("/post/megapost")
     })
 }
 
@@ -42,17 +48,61 @@ class ControllerDispatcherTest {
 
     val dispatcher = ControllerDispatcher();
 
-    Test fun rightPath() : Unit {
-        assertEquals("Hello index!", dispatcher.dispatch("/"))
-        assertEquals("Hello post!", dispatcher.dispatch("/post"))
+    Test fun shouldReturnRootHandler() : Unit {
+        val request = RequestHeader(
+                keepAlive = true,
+                requestProtocolVersion = HttpVersion.HTTP_1_1,
+                uri = "/",
+                path = "/",
+                method = HttpMethod.GET,
+                parameters = hashMapOf(),
+                headers = listOf()
+        )
+        val actionHandler = dispatcher.findActionHandler(request)
+        assertEquals(Controller.index, actionHandler.action)
     }
 
-    Test fun invalidPath() : Unit {
-        assertEquals("No route found", dispatcher.dispatch("/asd"))
+    Test fun shouldReturnRegularPathHandler() : Unit {
+        val request = RequestHeader(
+                keepAlive = true,
+                requestProtocolVersion = HttpVersion.HTTP_1_1,
+                uri = "/post",
+                path = "/post",
+                method = HttpMethod.GET,
+                parameters = hashMapOf(),
+                headers = listOf()
+        )
+        val actionHandler = dispatcher.findActionHandler(request)
+        assertEquals(Controller.post, actionHandler.action)
     }
 
-    Test fun withParams() : Unit {
-        assertEquals("Hello megapost!", dispatcher.dispatch("/post/megapost"))
+    Test fun shouldReturn404() : Unit {
+        val request = RequestHeader(
+                keepAlive = true,
+                requestProtocolVersion = HttpVersion.HTTP_1_1,
+                uri = "/asd",
+                path = "/asd",
+                method = HttpMethod.GET,
+                parameters = hashMapOf(),
+                headers = listOf()
+        )
+        val actionHandler = dispatcher.findActionHandler(request)
+        assertEquals(Action404, actionHandler.action)
+    }
+
+    Test fun shouldReturnNamedPathHandler() : Unit {
+        val request = RequestHeader(
+                keepAlive = true,
+                requestProtocolVersion = HttpVersion.HTTP_1_1,
+                uri = "/post/megapost",
+                path = "/post/megapost",
+                method = HttpMethod.GET,
+                parameters = hashMapOf(),
+                headers = listOf()
+        )
+        val actionHandler = dispatcher.findActionHandler(request)
+        assertEquals(Controller.show_post, actionHandler.action)
+        assertEquals(hashMapOf("name" to "megapost"), actionHandler.namedParams)
     }
 
 }

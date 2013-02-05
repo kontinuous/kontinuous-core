@@ -25,6 +25,9 @@ import org.jboss.netty.handler.codec.http.CookieEncoder
 import org.jboss.netty.channel.ChannelFuture
 import org.jboss.netty.channel.ChannelFutureListener
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
+import ru.ailabs.kontinuous.controller.RequestHeader
+import ru.ailabs.kontinuous.controller.Context
+import ru.ailabs.kontinuous.controller.SimpleResult
 
 /**
  * Alien Invaders Ltd.
@@ -53,7 +56,24 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
                 val headers = nettyHttpRequest.getHeaders()
 
-                writeResponse(e!!, nettyHttpRequest, "keepAlive: ${keepAlive} requestProtocolVersion: ${requestProtocolVersion} requestUri: ${path} requestParams: ${requestParams} headers: ${headers}")
+                val kontinuousRequest = RequestHeader(
+                        keepAlive = keepAlive,
+                        requestProtocolVersion = requestProtocolVersion!!,
+                        uri = nettyHttpRequest.getUri()!!,
+                        path = path!!,
+                        method = nettyHttpRequest.getMethod()!!,
+                        parameters = requestParams as Map<String, List<String>>,
+                        headers = headers as List<Map<String, String>>
+                )
+
+                val actionHandler = dispatcher.findActionHandler(kontinuousRequest)
+
+                val actionResult = actionHandler.action.handler(Context(actionHandler.namedParams))
+
+                when (actionResult) {
+                    is SimpleResult -> writeResponse(e!!, nettyHttpRequest, actionResult)
+                    else -> logger.warn("unknown action result ${actionResult}");
+                }
             }
             else -> {
 
@@ -61,41 +81,45 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
         }
     }
 
-    private fun writeResponse(e: MessageEvent, request: HttpRequest, buf: String) {
-         // Decide whether to close the connection or not.
-         val keepAlive = isKeepAlive(request);
+    private fun writeResponse(e: MessageEvent, request: HttpRequest, actionResult: SimpleResult) {
+        // Decide whether to close the connection or not.
+        val keepAlive = isKeepAlive(request);
 
-         // Build the response object.
-         val response = DefaultHttpResponse(HTTP_1_1, OK);
-         response.setContent(ChannelBuffers.copiedBuffer(buf, CharsetUtil.UTF_8));
-         response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
+        // Build the response object.
+        val response = DefaultHttpResponse(HTTP_1_1, actionResult);
+        response.setContent(ChannelBuffers.copiedBuffer(actionResult.body, CharsetUtil.UTF_8));
+        response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
 
-         if (keepAlive) {
-             // Add 'Content-Length' header only for a keep-alive connection.
-             response.setHeader(CONTENT_LENGTH, response.getContent()!!.readableBytes());
-         }
+        if (keepAlive) {
+            // Add 'Content-Length' header only for a keep-alive connection.
+            response.setHeader(CONTENT_LENGTH, response.getContent()!!.readableBytes());
+        }
 
-         // Encode the cookie.
-         val cookieString = request.getHeader(COOKIE);
-         if (cookieString != null) {
-                 val cookieDecoder = CookieDecoder();
-                 val cookies = cookieDecoder.decode(cookieString)!!;
-                 if(!cookies.isEmpty()) {
-                     // Reset the cookies if necessary.
-                     val cookieEncoder = CookieEncoder(true);
-                     for (cookie in cookies) {
-                         cookieEncoder.addCookie(cookie);
-                     }
-                 response.addHeader(SET_COOKIE, cookieEncoder.encode());
-             }
-         }
 
-         // Write the response.
-         val future = e.getChannel()?.write(response);
 
-         // Close the non-keep-alive connection after the write operation is done.
-         if (!keepAlive) {
-             future?.addListener(ChannelFutureListener.CLOSE);
-         }
-     }
+            val cookies = cookieDecoder.decode(cookieString)!!;
+            if(!cookies.isEmpty()) {
+                // Reset the cookies if necessary.
+                val cookieEncoder = CookieEncoder(true);
+                for (cookie in cookies) {
+                    response.setHeader();
+
+                    // Encode the cookie.
+                    val cookieString = request.getHeader(COOKIE);
+                    if (cookieString != null) {
+                        val cookieDecoder = CookieDecoder();
+                    cookieEncoder.addCookie(cookie);
+                }
+                response.addHeader(SET_COOKIE, cookieEncoder.encode());
+            }
+        }
+
+        // Write the response.
+        val future = e.getChannel()?.write(response);
+
+        // Close the non-keep-alive connection after the write operation is done.
+        if (!keepAlive) {
+            future?.addListener(ChannelFutureListener.CLOSE);
+        }
+    }
 }

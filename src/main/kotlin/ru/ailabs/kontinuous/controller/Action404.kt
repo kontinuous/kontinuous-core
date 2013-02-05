@@ -1,5 +1,6 @@
 package ru.ailabs.kontinuous.controller
 
+import ru.ailabs.kontinuous.controller.helper.render
 /**
  * Alien Invaders Ltd.
  * User: Aleksandr Khamutov
@@ -7,5 +8,5 @@ package ru.ailabs.kontinuous.controller
  * Time: 17:23
  */
 object Action404 : Action({ context ->
-    Pair(context.namedParameters, "views/404.tmpl.html")
+    NotFound(render("views/404.tmpl.html"))
 })

@@ -16,8 +16,11 @@ import ru.ailabs.kontinuous.controller.Action
 import ru.ailabs.kontinuous.view.ViewResolver
 import java.util.HashSet
 import ru.ailabs.kontinuous.annotation.routes
+import ru.ailabs.kontinuous.logger.LoggerFactory
 
 class ControllerDispatcher() {
+
+    val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.controller.ControllerDispatcher")
 
     val viewResolver = ViewResolver()
 
@@ -30,6 +33,7 @@ class ControllerDispatcher() {
                     if (ann is path) {
                         fld.setAccessible(true)
                         routes.add(Pair(UrlMatcher(ann.path), fld.get(inst) as Action))
+                        logger.debug("add route ${ann.path} to ${fld.get(inst)}");
                     }
                 }
             }
@@ -38,12 +42,6 @@ class ControllerDispatcher() {
 
     fun scanForRoutes(): jet.MutableSet<java.lang.Class<out jet.Any?>>? {
         return Reflections("").getTypesAnnotatedWith(javaClass<routes>())
-    }
-
-    fun dispatch(val url: String): String {
-        val actionHandler = findAction(url)
-        val answer = actionHandler.action.handler(Context(actionHandler.namedParams))
-        return viewResolver.resolveView(answer.component1(), answer.component2())
     }
 
     private fun findAction(val path: String): ActionHandler {
