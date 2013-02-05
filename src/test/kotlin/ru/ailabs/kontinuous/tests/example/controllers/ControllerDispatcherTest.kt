@@ -8,7 +8,6 @@
 
 package ru.ailabs.kontinuous.tests
 
-import ru.ailabs.kontinuous.getHelloString
 import kotlin.test.assertEquals
 import junit.framework.TestCase
 import ru.ailabs.kontinuous.annotation.path

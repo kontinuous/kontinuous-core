@@ -16,7 +16,7 @@ import java.util.HashSet
 
 class Application {
     {
-        fun scanForInitializers(): jet.MutableSet<java.lang.Class<out jet.Any?>?>? {
+        fun scanForInitializers(): jet.MutableSet<java.lang.Class<out jet.Any?>>? {
             return Reflections("").getTypesAnnotatedWith(javaClass<initializers>())
         }
 
