@@ -8,7 +8,6 @@
 
 package ru.ailabs.kontinuous.controller
 
-import javax.servlet.http.HttpServletRequest
 import java.util.HashMap
 import org.reflections.Reflections
 import ru.ailabs.kontinuous.annotation.path
@@ -27,7 +26,7 @@ class ControllerDispatcher() {
     val routes = HashSet<Pair<UrlMatcher, Action>>();
     {
         for (cls in scanForRoutes()!!.toCollection()) {
-            val inst = cls!!.newInstance();
+            val inst = cls.newInstance();
             for (fld in cls.getDeclaredFields()) {
                 for (ann in fld.getAnnotations()) {
                     if (ann is path) {
@@ -51,7 +50,7 @@ class ControllerDispatcher() {
             val pathNamedParam = pair.first.match(path).second
             ActionHandler(pair.second, pathNamedParam)
         } else {
-            ActionHandler(Action404, hashMapOf("path" to path))
+            ActionHandler(Action404, hashMapOf("url" to path))
         }
     }
 

@@ -8,5 +8,5 @@ import ru.ailabs.kontinuous.controller.helper.render
  * Time: 17:23
  */
 object Action404 : Action({ context ->
-    NotFound(render("views/404.tmpl.html"))
+    NotFound(render("views/404.tmpl.html", context.namedParameters))
 })

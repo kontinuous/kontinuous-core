@@ -14,7 +14,7 @@ class ResponseHeader(val status: Int, val headers: MutableMap<String, String> = 
 }
 
 trait WithHeaders {
-    fun withHeaders(header: MutableMap<String, String>)
+    fun withHeaders(headers: MutableMap<String, String>)
 }
 
 trait HttpResult {

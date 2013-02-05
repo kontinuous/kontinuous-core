@@ -14,6 +14,7 @@ import org.jboss.netty.handler.codec.http.HttpContentCompressor
 import java.net.InetSocketAddress
 
 import ru.ailabs.kontinuous.server.KontinuousHttpHandler
+import ru.ailabs.kontinuous.logger.LoggerFactory
 
 
 /**
@@ -25,6 +26,7 @@ import ru.ailabs.kontinuous.server.KontinuousHttpHandler
 // http://docs.jboss.org/netty/3.2/xref/org/jboss/netty/example/http/snoop/HttpServer.html
 
 class HttpServerPipelineFactory : ChannelPipelineFactory {
+
     public override fun getPipeline(): ChannelPipeline? {
         // Create a default pipeline implementation.
         val pipeline = Channels.pipeline()!!;
@@ -48,6 +50,8 @@ class HttpServerPipelineFactory : ChannelPipelineFactory {
 
 class NettyServer {
 
+    val logger = LoggerFactory.getLogger("Netty")
+
     private val serverBootstrap = ServerBootstrap(
         NioServerSocketChannelFactory(
             Executors.newCachedThreadPool(),
@@ -56,8 +60,12 @@ class NettyServer {
     )
 
     fun start() {
+        val port = 8080;
+
         serverBootstrap.setPipelineFactory(HttpServerPipelineFactory());
 
-        serverBootstrap.bind(InetSocketAddress(8080));
+        serverBootstrap.bind(InetSocketAddress(port));
+
+        logger.info("Listening for HTTP on ${port}")
     }
 }
