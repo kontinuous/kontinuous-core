@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
+import ru.ailabs.kontinuous.initializer.Application
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,8 +17,9 @@ public open class Servlet() : HttpServlet() {
     private var greeting = "Hello mad World!!!"
     protected override fun doGet(req : HttpServletRequest?, resp : HttpServletResponse?) : Unit {
 
-        var dispather: ControllerDispatcher = ControllerDispatcher()
-        var path : String = dispather.dispatch(req?.getRequestURI()!!)
+        val application = Application()
+//        var dispather: ControllerDispatcher = ControllerDispatcher()
+        var path : String = application.dispatcher.dispatch(req?.getRequestURI()!!)
         resp?.setContentType("text/html")
         resp?.setStatus(HttpServletResponse.SC_OK)
         resp?.getWriter()?.println("<h1>" + path + "</h1>")
