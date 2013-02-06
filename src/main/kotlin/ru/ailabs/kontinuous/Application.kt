@@ -3,7 +3,6 @@ package ru.ailabs.kontinuous.initializer
 import org.reflections.Reflections
 import ru.ailabs.kontinuous.annotation.initializers
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
-import java.util.Set
 import java.util.HashSet
 
 /**
@@ -21,7 +20,7 @@ class Application {
         }
 
         for (cls in scanForInitializers()!!.toCollection()) {
-            val initializers = cls!!.newInstance() as InitializersBase
+            val initializers = cls.newInstance() as InitializersBase
             initializers.init(this)
         }
     }

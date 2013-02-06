@@ -1,7 +1,5 @@
 package ru.ailabs.kontinuous.view
 
-import org.apache.velocity.app.Velocity
-import org.apache.velocity.VelocityContext
 import java.io.StringWriter
 import java.util.Properties
 import ru.ailabs.kontinuous.templates.GroovyTemplateRenderer
