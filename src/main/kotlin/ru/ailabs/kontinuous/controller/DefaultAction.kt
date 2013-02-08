@@ -10,3 +10,7 @@ import ru.ailabs.kontinuous.controller.helper.render
 object Action404 : Action({ context ->
     NotFound(render("views/404.tmpl.html", context.namedParameters))
 })
+
+object TODO : Action({ context ->
+    Ok(render("views/todo.tmpl.html"))
+})
