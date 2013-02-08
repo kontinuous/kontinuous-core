@@ -39,7 +39,12 @@ object HibernateSession {
         } catch (val e : HibernateException) {
             logger.warn(e.getMessage(), e)
         } finally {
-            sessionFactory = config!!.buildSessionFactory();
+            sessionFactory = try {
+                config!!.configure()!!.buildSessionFactory()
+            } catch (val e : Exception) {
+                logger.error(e.getMessage(), e)
+                null
+            }
         }
     }
 
