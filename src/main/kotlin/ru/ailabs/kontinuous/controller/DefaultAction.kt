@@ -16,7 +16,7 @@ class Action500(val e: Exception) : Action({ context ->
     e.printStackTrace(PrintStream(output, true))
     params.put("exception.message", e.getMessage()!!);
     params.put("exception.trace", output.toString());
-    NotFound(render("views/500.tmpl.html", params))
+    ServerError(render("views/500.tmpl.html", params))
 })
 
 object Action404 : Action({ context ->
