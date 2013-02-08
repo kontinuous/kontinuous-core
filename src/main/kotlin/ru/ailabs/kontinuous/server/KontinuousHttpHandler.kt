@@ -74,8 +74,11 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 val actionHandler = dispatcher.findActionHandler(kontinuousRequest)
 
                 val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!)
-                val actionResult = actionHandler.action.handler(context)
-                context.session.close()
+                val actionResult = try {
+                     actionHandler.action.handler(context)
+                } finally {
+                    context.session.close()
+                }
 
                 when (actionResult) {
                     is SimpleResult -> writeResponse(e!!, nettyHttpRequest, actionResult)
