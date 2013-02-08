@@ -4,6 +4,7 @@ import org.reflections.Reflections
 import ru.ailabs.kontinuous.annotation.initializers
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import java.util.HashSet
+import java.util.Properties
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +15,15 @@ import java.util.HashSet
  */
 
 class Application {
+
+    val dispatcher = ControllerDispatcher()
+    val properties = Properties();
+
     {
+        val stream = javaClass.getClassLoader()!!.getResourceAsStream("config/application.properties")
+        if (stream != null)
+            properties.load(stream);
+
         fun scanForInitializers(): jet.MutableSet<java.lang.Class<out jet.Any?>>? {
             return Reflections("").getTypesAnnotatedWith(javaClass<initializers>())
         }
@@ -25,6 +34,8 @@ class Application {
         }
     }
 
-    val dispatcher = ControllerDispatcher()
+    fun getProperty(val name: String, val default: String? = null) : String? {
+        return properties.getProperty(name, default)
+    }
 
 }
