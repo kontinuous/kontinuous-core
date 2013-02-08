@@ -33,6 +33,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus
 import org.jboss.netty.handler.codec.http.HttpVersion
 import org.jboss.netty.handler.codec.http.HttpHeaders
 import ru.ailabs.kontinuous.persistance.HibernateSession
+import ru.ailabs.kontinuous.controller.Action500
 
 /**
  * Alien Invaders Ltd.
@@ -76,6 +77,8 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!)
                 val actionResult = try {
                      actionHandler.action.handler(context)
+                } catch (val e : Exception) {
+                    Action500(e).handler(context)
                 } finally {
                     context.session.close()
                 }
