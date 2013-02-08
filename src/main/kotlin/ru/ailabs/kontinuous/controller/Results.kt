@@ -36,6 +36,8 @@ open class Status(val status: Int) : SimpleResult(header = ResponseHeader(HttpSt
 class Ok(body: String) : SimpleResult(header = ResponseHeader(HttpStatus.OK), body = body)
 class NotFound(body: String = emptyBody()) : SimpleResult(header = ResponseHeader(status = HttpStatus.NOT_FOUND),
                                                           body = body)
+class ServerError(body: String = emptyBody()) : SimpleResult(header = ResponseHeader(status = HttpStatus.INTERNAL_SERVER_ERROR),
+        body = body)
 class Redirect(url: String) : SimpleResult(header = ResponseHeader(status = HttpStatus.SEE_OTHER,
                                                                    headers = hashMapOf(HttpHeaderNames.LOCATION to url)),
                                            body = emptyBody())

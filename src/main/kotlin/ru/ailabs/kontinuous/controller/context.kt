@@ -1,6 +1,9 @@
 package ru.ailabs.kontinuous.controller
 
 import java.util.HashMap
+import org.hibernate.Hibernate
+import ru.ailabs.kontinuous.persistance.HibernateSession
+import org.hibernate.Session
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +13,5 @@ import java.util.HashMap
  * To change this template use File | Settings | File Templates.
  */
 
-public open class Context(val namedParameters : Map<String, String>) {
+public open class Context(val namedParameters : Map<String, String>, val session : Session) {
 }
