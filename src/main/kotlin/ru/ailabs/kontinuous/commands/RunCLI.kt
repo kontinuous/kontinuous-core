@@ -3,6 +3,7 @@ package ru.ailabs.kontinuous.commands
 import java.io.InputStreamReader
 import java.io.BufferedReader
 import sun.security.action.GetBooleanAction
+import java.util.ArrayList
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +24,9 @@ fun main(args: Array<String>) {
         }
         var start : Command = StartCommand(str)
         var stop : Command = StopCommand(str)
+        var help : Command = HelpCommand(str)
         start.execute()
         stop.execute()
+        help.execute()
     }
 }
