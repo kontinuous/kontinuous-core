@@ -8,10 +8,11 @@ package ru.ailabs.kontinuous.commands
  * To change this template use File | Settings | File Templates.
  */
 
-class StartCommand(val command: String?) : Command {
+class StartCommand() : Command {
 
-    override fun execute() {
+    override fun execute(val command: String?) : Boolean {
         if (command.equals("start"))
-        println("Start Kontinuous")
+            println("Start Kontinuous")
+        return true
     }
 }
