@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
     commandMap.put("exit", exit)
 
     while (exitKey) {
-        var str: String?  = br.readLine()
+        var str: String?  = if (br.readLine() !=null ) br.readLine() else return
         if (str in commandMap.keySet()){
             var success : Boolean = commandMap.get(str)!!.execute(str)
             if (success){
