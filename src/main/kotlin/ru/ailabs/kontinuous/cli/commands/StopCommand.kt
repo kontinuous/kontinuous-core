@@ -9,9 +9,8 @@ package ru.ailabs.kontinuous.commands
  */
 class StopCommand() : Command {
 
-    override fun execute(val command: String?) : Boolean {
-        if (command.equals("stop"))
-            println("Stop Kontinuous")
+    override fun execute() : Boolean {
+        println("Stop Kontinuous")
         return true
     }
 }

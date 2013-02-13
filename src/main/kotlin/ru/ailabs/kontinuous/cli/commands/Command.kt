@@ -9,5 +9,5 @@ package ru.ailabs.kontinuous.commands
  */
 
 trait Command {
-    fun execute(val command: String?) : Boolean
+    fun execute() : Boolean
 }

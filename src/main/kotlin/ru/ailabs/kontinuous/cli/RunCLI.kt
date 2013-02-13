@@ -18,6 +18,7 @@ var exitKey: Boolean = true
 fun main(args: Array<String>) {
 
     var br : BufferedReader = BufferedReader(InputStreamReader(System.`in`))
+    var pref: String = "konti$>"
     var start : Command = StartCommand()
     var stop : Command = StopCommand()
     var help : Command = HelpCommand()
@@ -31,16 +32,19 @@ fun main(args: Array<String>) {
     commandMap.put("exit", exit)
 
     while (exitKey) {
-        var str: String?  = if (br.readLine() !=null ) br.readLine() else return
-        if (str in commandMap.keySet()){
-            var success : Boolean = commandMap.get(str)!!.execute(str)
-            if (success){
-                continue
+        print(pref)
+        var str : String? = br.readLine()
+        if (str!!.length()>0){
+            if (str in commandMap.keySet()){
+                var success : Boolean = commandMap.get(str)!!.execute()
+                if (success){
+                    continue
+                } else {
+                    println("Command run error!")
+                }
             } else {
-                println("Command run error!")
+                println("Unknown command!")
             }
-        } else {
-            println("Unknown command!")
         }
     }
 }

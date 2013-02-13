@@ -9,9 +9,8 @@ package ru.ailabs.kontinuous.commands
  */
 class ExitCommand() : Command {
 
-    override fun execute(val command: String?) : Boolean {
-        if (command.equals("exit"))
-            println("Exit Kontinuous")
+    override fun execute() : Boolean {
+        println("Exit Kontinuous")
         exitKey = false
         return true
     }

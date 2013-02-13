@@ -10,9 +10,8 @@ package ru.ailabs.kontinuous.commands
 
 class StartCommand() : Command {
 
-    override fun execute(val command: String?) : Boolean {
-        if (command.equals("start"))
-            println("Start Kontinuous")
+    override fun execute() : Boolean {
+        println("Start Kontinuous")
         return true
     }
 }

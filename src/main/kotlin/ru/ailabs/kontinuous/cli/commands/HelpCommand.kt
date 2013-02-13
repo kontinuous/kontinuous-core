@@ -9,15 +9,13 @@ package ru.ailabs.kontinuous.commands
  */
 class HelpCommand() : Command {
 
-    override fun execute(val command: String?) : Boolean {
-        if (command.equals("help")) {
-            println("Welcome to kontinuous framework!\n"
-            +"\n"
-            +"start              Start the kontinuous\n"
-            +"stop               Stop the kontnuous\n"
-            +"help               Display help information\n"
-            +"exit               To exit program");
-        }
+    override fun execute() : Boolean {
+        println("""Welcome to kontinuous framework!
+
+start              Start the kontinuous
+stop               Stop the kontnuous
+help               Display help information
+exit               To exit program""");
         return true
     }
 }
