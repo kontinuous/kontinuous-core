@@ -13,8 +13,7 @@ import ru.ailabs.kontinuous.initializer.Application
  * To change this template use File | Settings | File Templates.
  */
 
-initializers class ApplicationInitializers : InitializersBase {
-
+initializers class HibernateInitializer : InitializersBase {
     override fun init(val app: Application) {
         HibernateSession.init(app)
     }

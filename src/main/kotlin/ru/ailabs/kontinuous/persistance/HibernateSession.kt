@@ -39,12 +39,15 @@ object HibernateSession {
         } catch (val e : HibernateException) {
             logger.warn(e.getMessage(), e)
         } finally {
-            sessionFactory = try {
-                config!!.configure()!!.buildSessionFactory()
+            val factory = try {
+                config!!.buildSessionFactory()
             } catch (val e : Exception) {
                 logger.error(e.getMessage(), e)
                 null
             }
+            println(factory)
+            // FIXME: workaround, you can not use stack with try-catch, see http://youtrack.jetbrains.com/issue/KT-3309
+            sessionFactory = factory
         }
     }
 

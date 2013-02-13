@@ -5,6 +5,7 @@ import ru.ailabs.kontinuous.annotation.initializers
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import java.util.HashSet
 import java.util.Properties
+import ru.ailabs.kontinuous.annotation.AnnotationScanner
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,21 +15,19 @@ import java.util.Properties
  * To change this template use File | Settings | File Templates.
  */
 
-class Application {
+open class Application(val annotationScanner: AnnotationScanner = AnnotationScanner()) {
 
     val dispatcher = ControllerDispatcher()
     val properties = Properties();
 
     {
         val stream = javaClass.getClassLoader()!!.getResourceAsStream("config/application.properties")
-        if (stream != null)
-            properties.load(stream);
-
-        fun scanForInitializers(): jet.MutableSet<java.lang.Class<out jet.Any?>>? {
-            return Reflections("").getTypesAnnotatedWith(javaClass<initializers>())
+        if (stream != null) {
+            properties.load(stream)
         }
 
-        for (cls in scanForInitializers()!!.toCollection()) {
+        annotationScanner.scanFor(javaClass<initializers>()) { cls ->
+            println("initialize")
             val initializers = cls.newInstance() as InitializersBase
             initializers.init(this)
         }
