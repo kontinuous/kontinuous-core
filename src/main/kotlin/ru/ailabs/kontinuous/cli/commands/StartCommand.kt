@@ -5,7 +5,6 @@ package ru.ailabs.kontinuous.commands
  * User: Никита
  * Date: 06.02.13
  * Time: 23:43
- * To change this template use File | Settings | File Templates.
  */
 
 class StartCommand() : Command {

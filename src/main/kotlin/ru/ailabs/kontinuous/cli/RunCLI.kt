@@ -11,7 +11,6 @@ import java.util.HashMap
  * User: Никита
  * Date: 07.02.13
  * Time: 0:01
- * To change this template use File | Settings | File Templates.
  */
 var exitKey: Boolean = true
 
