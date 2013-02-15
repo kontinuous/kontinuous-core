@@ -6,6 +6,7 @@ import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import java.util.HashSet
 import java.util.Properties
 import ru.ailabs.kontinuous.annotation.AnnotationScanner
+import ru.ailabs.kontinuous.logger.LoggerFactory
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +18,8 @@ import ru.ailabs.kontinuous.annotation.AnnotationScanner
 
 open class Application(val annotationScanner: AnnotationScanner = AnnotationScanner()) {
 
+    val logger = LoggerFactory.getLogger("Kontinuous.Application");
+
     val dispatcher = ControllerDispatcher()
     val properties = Properties();
 
@@ -26,6 +29,7 @@ open class Application(val annotationScanner: AnnotationScanner = AnnotationScan
             properties.load(stream)
         }
 
+        logger.info("Scan for initializers")
         annotationScanner.scanFor(javaClass<initializers>()) { cls ->
             println("initialize")
             val initializers = cls.newInstance() as InitializersBase

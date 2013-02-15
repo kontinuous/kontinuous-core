@@ -32,6 +32,7 @@ class UrlMatcher(val urlTemplate : String) {
                 result.put(it.next(), matcher.group(i++)!!)
             }
         }
+        result.put("url", url)
         return Pair(matched, result)
     }
 }

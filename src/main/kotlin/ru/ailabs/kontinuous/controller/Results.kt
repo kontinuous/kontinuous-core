@@ -25,7 +25,7 @@ fun emptyBody(): String {
     return ""
 }
 
-open class SimpleResult(val header: ResponseHeader, val body: String) : HttpResult, WithHeaders {
+open class SimpleResult(val header: ResponseHeader, val body: Any) : HttpResult, WithHeaders {
     override fun withHeaders(headers: MutableMap<String, String>) {
         header.headers.putAll(headers)
     }
