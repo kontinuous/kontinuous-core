@@ -13,5 +13,5 @@ import org.hibernate.Session
  * To change this template use File | Settings | File Templates.
  */
 
-public open class Context(val namedParameters : Map<String, String>, val session : Session) {
+public open class Context(val namedParameters : Map<String, String>, val session : Session, val url: ) {
 }

@@ -102,7 +102,7 @@ class ControllerDispatcherTest {
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Controller.show_post, actionHandler.action)
-        assertEquals(hashMapOf("name" to "megapost"), actionHandler.namedParams)
+        assertEquals("megapost", actionHandler.namedParams["name"])
     }
 
 }

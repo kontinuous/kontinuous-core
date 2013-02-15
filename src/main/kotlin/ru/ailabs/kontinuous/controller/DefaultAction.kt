@@ -14,7 +14,7 @@ class Action500(val e: Exception) : Action({ context ->
     val params = context.namedParameters.toLinkedMap()
     val output = ByteArrayOutputStream()
     e.printStackTrace(PrintStream(output, true))
-    params.put("exception.message", e.getMessage()!!);
+    params.put("exception_message", e.getMessage()!!);
     params.put("exception.trace", output.toString());
     ServerError(render("views/500.tmpl.html", params))
 })

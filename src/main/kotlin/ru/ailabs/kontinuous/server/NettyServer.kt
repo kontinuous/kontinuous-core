@@ -15,6 +15,7 @@ import java.net.InetSocketAddress
 
 import ru.ailabs.kontinuous.server.KontinuousHttpHandler
 import ru.ailabs.kontinuous.logger.LoggerFactory
+import ru.ailabs.kontinuous.initializer.Application
 
 
 /**
@@ -41,7 +42,7 @@ class HttpServerPipelineFactory : ChannelPipelineFactory {
         //pipeline.addLast("aggregator", new HttpChunkAggregator(1048576));
         pipeline.addLast("encoder", HttpResponseEncoder());
         // Remove the following line if you don't want automatic content compression.
-        pipeline.addLast("deflater", HttpContentCompressor());
+        //pipeline.addLast("deflater", HttpContentCompressor());
         pipeline.addLast("handler", KontinuousHttpHandler());
         return pipeline;
     }
@@ -51,6 +52,8 @@ class HttpServerPipelineFactory : ChannelPipelineFactory {
 class NettyServer {
 
     val logger = LoggerFactory.getLogger("Netty")
+
+    var application: Application? = null
 
     private val serverBootstrap = ServerBootstrap(
         NioServerSocketChannelFactory(
@@ -65,6 +68,8 @@ class NettyServer {
         serverBootstrap.setPipelineFactory(HttpServerPipelineFactory());
 
         serverBootstrap.bind(InetSocketAddress(port));
+
+        application = Application()
 
         logger.info("Listening for HTTP on ${port}")
     }
