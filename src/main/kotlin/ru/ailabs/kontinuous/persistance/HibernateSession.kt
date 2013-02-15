@@ -26,6 +26,7 @@ object HibernateSession {
     var sessionFactory: SessionFactory? = null
 
     fun init(app: Application) {
+        logger.info("Hibernate initialize start")
         val defaultProperties = Properties()
         defaultProperties.setProperty("hibernate.connection.driver_class", DEFAULT_DB_DRIVER)
         defaultProperties.setProperty("hibernate.connection.url", DEFAULT_DB_URL)
@@ -49,6 +50,7 @@ object HibernateSession {
             // FIXME: workaround, you can not use stack with try-catch, see http://youtrack.jetbrains.com/issue/KT-3309
             sessionFactory = factory
         }
+        logger.info("Hibernate initialized")
     }
 
     fun initialized() : Boolean {

@@ -25,7 +25,6 @@ class UrlMatcherTest {
         val matcher = UrlMatcher("/path/to/controller")
         val result = matcher.match("/path/to/controller")
         assertEquals(true, result.first)
-        assertEquals(true, result.second.isEmpty() )
 
     }
 
@@ -43,7 +42,6 @@ class UrlMatcherTest {
         val result = matcher.match("/path/1/entity/100")
         assertEquals(true, result.first)
         assertEquals(false, result.second.isEmpty() )
-        assertEquals(2, result.second.size() )
         assertEquals(true, result.second.containsKey("id") )
         assertEquals("100", result.second.get("id") )
         assertEquals(true, result.second.containsKey("app") )

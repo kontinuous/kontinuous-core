@@ -17,13 +17,12 @@ import java.util.HashSet
 import ru.ailabs.kontinuous.annotation.routes
 import ru.ailabs.kontinuous.logger.LoggerFactory
 
-class ControllerDispatcher() {
+class ControllerDispatcher {
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.controller.ControllerDispatcher")
 
-    val viewResolver = ViewResolver()
-
     val routes = HashSet<Pair<UrlMatcher, Action>>();
+
     {
         for (cls in scanForRoutes()!!.toCollection()) {
             val inst = cls.newInstance();
@@ -38,6 +37,8 @@ class ControllerDispatcher() {
             }
         }
     }
+
+    val viewResolver = ViewResolver()
 
     fun scanForRoutes(): jet.MutableSet<java.lang.Class<out jet.Any?>>? {
         return Reflections("").getTypesAnnotatedWith(javaClass<routes>())
