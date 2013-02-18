@@ -83,7 +83,14 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
                 val actionHandler = dispatcher.findActionHandler(kontinuousRequest)
 
-                val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!)
+                val body = {
+                    val cBuffer = nettyHttpRequest.getContent()!!
+                    val bytes = ByteArray(cBuffer.readableBytes())
+                    cBuffer.readBytes(bytes)
+                    bytes
+                }
+
+                val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!, body())
                 val actionResult = try {
                      actionHandler.action.handler(context)
                 //} catch (val e : Exception) {
