@@ -32,17 +32,18 @@ fun main(args: Array<String>) {
 
     while (exitKey) {
         print(pref)
-        var str : String? = br.readLine()
-        if (str!!.length()>0){
-            if (str in commandMap.keySet()){
-                var success : Boolean = commandMap.get(str)!!.execute()
-                if (success){
-                    continue
+        val strRead = br.readLine()
+        if(strRead != null) {
+            if(strRead.length() >0) {
+                if (strRead in commandMap.keySet()){
+                    if (commandMap.get(strRead)!!.execute()){
+                        continue
+                    } else {
+                        println("Command run error!")
+                    }
                 } else {
-                    println("Command run error!")
+                    println("Unknown command!")
                 }
-            } else {
-                println("Unknown command!")
             }
         }
     }
