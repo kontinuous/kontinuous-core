@@ -10,28 +10,37 @@ package ru.ailabs.kontinuous.controller
 
 import java.util.HashMap
 import org.reflections.Reflections
-import ru.ailabs.kontinuous.annotation.path
 import ru.ailabs.kontinuous.controller.Action
 import ru.ailabs.kontinuous.view.ViewResolver
 import java.util.HashSet
 import ru.ailabs.kontinuous.annotation.routes
 import ru.ailabs.kontinuous.logger.LoggerFactory
+import ru.ailabs.kontinuous.annotation.GET
+import ru.ailabs.kontinuous.annotation.POST
 
 class ControllerDispatcher {
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.controller.ControllerDispatcher")
 
-    val routes = HashSet<Pair<UrlMatcher, Action>>();
+    val routes = HashMap<String, HashSet<Pair<UrlMatcher, Action>>>();
+//    val post = HashSet<Pair<UrlMatcher, Action>>();
 
     {
         for (cls in scanForRoutes()!!.toCollection()) {
             val inst = cls.newInstance();
             for (fld in cls.getDeclaredFields()) {
                 for (ann in fld.getAnnotations()) {
-                    if (ann is path) {
+                    if(ann is GET || ann is POST) {
+                        val name = ann.annotationType().getSimpleName();
+                        var mapping = routes.get(name);
+                        if (mapping == null) {
+                            mapping = HashSet<Pair<UrlMatcher, Action>>()
+                            routes.put(name, mapping!!)
+                        }
+                        val path = if (ann is GET) ann.path else if (ann is POST) ann.path
                         fld.setAccessible(true)
-                        routes.add(Pair(UrlMatcher(ann.path), fld.get(inst) as Action))
-                        logger.debug("add route ${ann.path} to ${fld.get(inst)}");
+                        mapping?.add(Pair(UrlMatcher(path as String), fld.get(inst) as Action))
+                        logger.debug("add route ${path} to ${fld.get(inst)} method: ${name}");
                     }
                 }
             }
@@ -44,19 +53,25 @@ class ControllerDispatcher {
         return Reflections("").getTypesAnnotatedWith(javaClass<routes>())
     }
 
-    private fun findAction(val path: String): ActionHandler {
-        val pair = routes find { it -> it.first.match(path).first }
+    private fun findAction(val path: String, val method: String): ActionHandler {
+        val mapping = routes.get(method.toUpperCase())
+        return if (mapping != null) {
+            val pair = mapping find { it -> it.first.match(path).first }
 
-        return if(pair != null) {
-            val pathNamedParam = pair.first.match(path).second
-            ActionHandler(pair.second, pathNamedParam)
+            if(pair != null) {
+                val pathNamedParam = pair.first.match(path).second
+                ActionHandler(pair.second, pathNamedParam)
+            } else {
+                ActionHandler(Action404, hashMapOf("url" to path))
+            }
         } else {
-            ActionHandler(Action404, hashMapOf("url" to path))
+            logger.error("undefined method ${method} on path ${path}");
+            ActionHandler(Action404, hashMapOf("url" to path)) //todo undefined method
         }
     }
 
     fun findActionHandler(val requestHeader: RequestHeader): ActionHandler {
         val path = requestHeader.path
-        return findAction(path)
+        return findAction(path, requestHeader.method.getName()!!)
     }
 }

@@ -15,3 +15,7 @@ object ControllerHelper {
 fun render(viewName: String, params: Map<String, Any> = hashMapOf()): String {
     return ControllerHelper.viewResolver.resolveView(params, viewName)
 }
+
+//fun render_json(params: Map<String, Any> = hashMapOf()): String {
+//
+//}

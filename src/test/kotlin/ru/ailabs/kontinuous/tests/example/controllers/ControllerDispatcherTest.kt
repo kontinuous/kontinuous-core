@@ -10,7 +10,8 @@ package ru.ailabs.kontinuous.tests
 
 import kotlin.test.assertEquals
 import junit.framework.TestCase
-import ru.ailabs.kontinuous.annotation.path
+import ru.ailabs.kontinuous.annotation.GET
+import ru.ailabs.kontinuous.annotation.POST
 import ru.ailabs.kontinuous.annotation.routes
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import org.junit.Test
@@ -35,13 +36,18 @@ object Controller {
     val show_post = Action ({ context ->
         Ok("/post/megapost")
     })
+
+    val post_m = Action ({
+        Ok(render("Hello post method!", hashMapOf()))
+    })
 }
 
 routes class Routes {
 
-    path("/")  val index = Controller.index
-    path("/post")  val post = Controller.post
-    path("/post/:name")  val show_post = Controller.show_post
+    GET("/")  val index = Controller.index;
+    POST("/post")  val post_m = Controller.post_m
+    GET("/post")  val post = Controller.post;
+    GET("/post/:name")  val show_post = Controller.show_post;
 }
 
 class ControllerDispatcherTest {
@@ -104,5 +110,16 @@ class ControllerDispatcherTest {
         assertEquals(Controller.show_post, actionHandler.action)
         assertEquals("megapost", actionHandler.namedParams["name"])
     }
-
-}
+    Test fun shouldReturnNamedPathHandlerWithMethodPost() : Unit {
+        val request = RequestHeader(
+                keepAlive = true,
+                requestProtocolVersion = HttpVersion.HTTP_1_1,
+                uri = "/post",
+                path = "/post",
+                method = HttpMethod.POST,
+                parameters = hashMapOf(),
+                headers = listOf()
+        )
+        val actionHandler = dispatcher.findActionHandler(request)
+        assertEquals(Controller.post_m, actionHandler.action)
+    }}

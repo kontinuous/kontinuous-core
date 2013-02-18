@@ -12,4 +12,5 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Retention
 
 Retention(RetentionPolicy.RUNTIME) annotation class routes
-Retention(RetentionPolicy.RUNTIME) annotation class path(val path: String)
+Retention(RetentionPolicy.RUNTIME) annotation class GET(val path: String)
+Retention(RetentionPolicy.RUNTIME) annotation class POST(val path: String)
