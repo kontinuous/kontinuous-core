@@ -65,4 +65,23 @@ class UrlMatcherTest {
         assertEquals(true, result.second.containsKey("name") )
         assertEquals("megapost", result.second.get("name") )
     }
+
+    Test fun greedyUrlParameter() {
+        val matcher = UrlMatcher("/post/*file")
+        val result = matcher.match("/post/path/to/megafile.js")
+        assertEquals(true, result.first)
+        assertEquals(false, result.second.isEmpty() )
+        assertEquals(true, result.second.containsKey("file") )
+        assertEquals("path/to/megafile.js", result.second.get("file") )
+    }
+    Test fun urlWithBothParameterType() {
+        val matcher = UrlMatcher("/post/:id/path/*file")
+        val result = matcher.match("/post/13/path/to/megafile.js")
+        assertEquals(true, result.first)
+        assertEquals(false, result.second.isEmpty() )
+        assertEquals(true, result.second.containsKey("id") )
+        assertEquals(true, result.second.containsKey("file") )
+        assertEquals("to/megafile.js", result.second.get("file") )
+        assertEquals("13", result.second.get("id") )
+    }
 }

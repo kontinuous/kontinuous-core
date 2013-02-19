@@ -13,4 +13,7 @@ object LoggerFactory {
     fun getLogger(name: String): Logger {
         return org.slf4j.LoggerFactory.getLogger(name)!!
     }
+    fun getLogger(clazz: Class<out Any>): Logger {
+        return org.slf4j.LoggerFactory.getLogger(clazz)!!
+    }
 }
