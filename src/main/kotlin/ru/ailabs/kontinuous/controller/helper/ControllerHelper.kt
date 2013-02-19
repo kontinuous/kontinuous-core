@@ -17,7 +17,8 @@ fun render(viewName: String, params: Map<String, Any> = hashMapOf()): String {
     return ControllerHelper.viewResolver.resolveView(params, viewName)
 }
 
-fun render_json(params: Map<String, Any>): String {
+fun render_json(params: Any): String {
     val mapper = ObjectMapper()
     return mapper.writeValueAsString(params)!!
 }
+
