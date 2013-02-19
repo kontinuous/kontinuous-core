@@ -13,19 +13,17 @@ import ru.ailabs.kontinuous.logger.LoggerFactory
  * To change this template use File | Settings | File Templates.
  */
 
-//todo need to generate regexp for url at the constructor
 class UrlMatcher(val urlTemplate : String) {
 
-    val logger = LoggerFactory.getLogger(javaClass<UrlMatcher>())
+    private val logger = LoggerFactory.getLogger(javaClass<UrlMatcher>())
 
-    //todo need to replace Pair with a Result object. It will be more clearly
-    fun match(val url : String) : Pair<Boolean, Map<String, String> > {
-        val result = HashMap<String, String>()
+    private class Matching(val paramsPattern: String, val params: List<String>)
+    public class Result(val matched: Boolean, val result: Map<String, String>)
 
+    val matching = {
         var matcher = Pattern.compile("""(?<=\/)[\:\*][^\s\/\:]+(?=\/|$)""").matcher(urlTemplate)
         val params = ArrayList<String>()
         var paramsPattern = urlTemplate
-        logger.debug("Url: ${url}")
         logger.debug("Url template: ${urlTemplate}")
         while (matcher.find()) {
             val param = matcher.group()
@@ -37,9 +35,13 @@ class UrlMatcher(val urlTemplate : String) {
                 paramsPattern = paramsPattern.replace(param, """(.*)""")
         }
         logger.debug("Url pattern: ${paramsPattern}")
-//        val paramsPattern = matcher.replaceAll("""([^\\s\/\:]+)""")
-        matcher = Pattern.compile(paramsPattern).matcher(url)
-        val it = params.iterator();
+        Matching(paramsPattern, params)
+    } ()
+
+    fun match(val url : String) : Result {
+        val result = HashMap<String, String>()
+        val matcher = Pattern.compile(matching.paramsPattern).matcher(url)
+        val it = matching.params.iterator();
         val matched = matcher.find() && matcher.group().equals(url)
         logger.debug("Matched: ${matched}")
         if(matched){
@@ -49,6 +51,6 @@ class UrlMatcher(val urlTemplate : String) {
             }
         }
         result.put("url", url)
-        return Pair(matched, result)
+        return Result(matched, result)
     }
 }

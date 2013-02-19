@@ -56,10 +56,10 @@ class ControllerDispatcher {
     private fun findAction(val path: String, val method: String): ActionHandler {
         val mapping = routes.get(method.toUpperCase())
         return if (mapping != null) {
-            val pair = mapping find { it -> it.first.match(path).first }
+            val pair = mapping map { Pair(it.first.match(path), it.second) } find {it.first.matched}
 
             if(pair != null) {
-                val pathNamedParam = pair.first.match(path).second
+                val pathNamedParam = pair.first.result
                 ActionHandler(pair.second, pathNamedParam)
             } else {
                 ActionHandler(Action404, hashMapOf("url" to path))
