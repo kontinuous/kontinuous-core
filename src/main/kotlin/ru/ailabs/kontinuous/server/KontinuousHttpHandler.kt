@@ -91,11 +91,13 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 }
 
                 val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!, body())
+                val tx = context.session.beginTransaction();
                 val actionResult = try {
                      actionHandler.action.handler(context)
                 //} catch (val e : Exception) {
                 //    Action500(e).handler(context)
                 } finally {
+                    tx?.commit()
                     context.session.close()
                 }
 
