@@ -43,6 +43,7 @@ import ru.ailabs.kontinuous.controller.HttpHeaderNames
 import org.jboss.netty.channel.ChannelFutureListener
 import org.jboss.netty.channel.ChannelFutureProgressListener
 import org.jboss.netty.channel.DefaultFileRegion
+import ru.ailabs.kontinuous.initializer.Application
 
 /**
  * Alien Invaders Ltd.
@@ -54,7 +55,7 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.server.KontinuousHttpHandler")
 
-    val dispatcher = ControllerDispatcher()
+    val dispatcher = Application.instance!!.dispatcher
 
     public override fun messageReceived(ctx: ChannelHandlerContext?, e: MessageEvent?) {
         val nettyHttpRequest = e?.getMessage()

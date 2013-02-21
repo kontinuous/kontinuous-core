@@ -1,12 +1,19 @@
 package ru.ailabs.kontinuous.initializer
 
 import org.reflections.Reflections
-import ru.ailabs.kontinuous.annotation.initializers
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import java.util.HashSet
 import java.util.Properties
 import ru.ailabs.kontinuous.annotation.AnnotationScanner
 import ru.ailabs.kontinuous.logger.LoggerFactory
+import org.reflections.util.ClasspathHelper
+import org.reflections.util.ConfigurationBuilder
+import ru.ailabs.kontinuous.configuration.Configuration
+import ru.ailabs.kontinuous.configuration.configuration
+import ru.ailabs.kontinuous.persistance.HibernateSession
+
+//import ru.ailabs.kontinuous.configuration.Configuration
+//import ru.ailabs.kontinuous.configuration
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,11 +23,51 @@ import ru.ailabs.kontinuous.logger.LoggerFactory
  * To change this template use File | Settings | File Templates.
  */
 
-open class Application(val annotationScanner: AnnotationScanner = AnnotationScanner()) {
+trait ApplicationDiscovery {
+    fun find(): Class<out Application>
+}
+
+open class Application() {
+
+    class object {
+
+        class DefaultApplicationDiscovery : ApplicationDiscovery {
+
+            val logger = LoggerFactory.getLogger("Kontinuous.Application");
+
+            override fun find(): Class<out Application> {
+                val classes = Reflections("").getSubTypesOf(javaClass<Application>())
+                if(classes == null) {
+                    throw RuntimeException("User Application class not found!")
+                }
+                if(classes.size() != 1) {
+                    logger.error("Founded ${classes.size()} User Applications.")
+                    logger.error("Default application discoverer expects exactly one User Application class.")
+                    logger.error("List of finded User Application classes:")
+                    for(applicationClass in classes) {
+                        logger.error(applicationClass.getCanonicalName())
+                    }
+                    logger.error("Please remove unused User Application or provide custom appliction discoverer")
+                    throw RuntimeException("Founded ${classes.size()} User Applications.")
+                }
+
+                return classes.first()
+            }
+        }
+
+        var instance: Application? = null
+
+        fun create(discovery: ApplicationDiscovery = DefaultApplicationDiscovery()): Application {
+            val app = discovery.find()
+            instance = app.newInstance()
+            return instance!!
+        }
+    }
 
     val logger = LoggerFactory.getLogger("Kontinuous.Application");
 
-    val dispatcher = ControllerDispatcher()
+    val conf = configure()
+    val dispatcher = ControllerDispatcher(conf.routes)
     val properties = Properties();
 
     {
@@ -28,13 +75,16 @@ open class Application(val annotationScanner: AnnotationScanner = AnnotationScan
         if (stream != null) {
             properties.load(stream)
         }
-
-        logger.info("Scan for initializers")
-        annotationScanner.scanFor(javaClass<initializers>()) { cls ->
-            println("initialize")
-            val initializers = cls.newInstance() as InitializersBase
-            initializers.init(this)
+        for (initializer in conf.initializers) {
+            initializer()
         }
+    }
+
+    open fun configure(init: Configuration.() -> Unit = {}) : Configuration  = configuration {
+        initialize {
+            HibernateSession.init(this)
+        }
+        init()
     }
 
     fun getProperty(val name: String, val default: String? = null) : String? {
