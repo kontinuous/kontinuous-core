@@ -1,12 +1,11 @@
 package ru.ailabs.kontinuous.persistance
 
-import ru.ailabs.kontinuous.initializer.InitializersBase
-import ru.ailabs.kontinuous.initializer.Application
-import org.hibernate.cfg.Configuration
 import java.util.Properties
-import org.hibernate.SessionFactory
-import ru.ailabs.kontinuous.logger.LoggerFactory
 import org.hibernate.HibernateException
+import org.hibernate.SessionFactory
+import org.hibernate.cfg.Configuration
+import ru.ailabs.kontinuous.initializer.Application
+import ru.ailabs.kontinuous.logger.LoggerFactory
 
 /**
  * Created with IntelliJ IDEA.
