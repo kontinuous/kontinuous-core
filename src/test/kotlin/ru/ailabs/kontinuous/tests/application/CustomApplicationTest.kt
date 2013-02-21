@@ -7,6 +7,7 @@ import ru.ailabs.kontinuous.configuration.Configuration
 import ru.ailabs.kontinuous.initializer.Application
 import ru.ailabs.kontinuous.configuration.configuration
 import kotlin.test.assertNotNull
+import ru.ailabs.kontinuous.initializer.ApplicationDiscovery
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,12 +34,15 @@ class CustomApplication : Application() {
 
 class CustomApplicationTest {
 
-    // todo how to do tests with many applications
-//    Test fun testApplicationDiscovery() : Unit {
-//        assertFalse(ExampleSession.initialized)
-//        val app = Application.create()
-//        assertNotNull(Application.instance)
-//        assertTrue(app is CustomApplication)
-//        assertTrue(ExampleSession.initialized)
-//    }
+    Test fun testApplicationDiscovery() : Unit {
+        assertFalse(ExampleSession.initialized)
+        val app = Application.create(object : ApplicationDiscovery {
+            override fun find(): Class<out Application> {
+                return javaClass<CustomApplication>()
+            }
+        })
+        assertNotNull(Application.instance)
+        assertTrue(app is CustomApplication)
+        assertTrue(ExampleSession.initialized)
+    }
 }

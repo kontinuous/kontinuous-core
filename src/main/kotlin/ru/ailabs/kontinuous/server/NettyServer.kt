@@ -69,7 +69,7 @@ class NettyServer {
 
         serverBootstrap.bind(InetSocketAddress(port));
 
-        application = Application()
+        application = Application.create()
 
         logger.info("Listening for HTTP on ${port}")
     }

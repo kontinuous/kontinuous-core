@@ -23,17 +23,43 @@ import ru.ailabs.kontinuous.persistance.HibernateSession
  * To change this template use File | Settings | File Templates.
  */
 
+trait ApplicationDiscovery {
+    fun find(): Class<out Application>
+}
+
 open class Application() {
 
     class object {
-        var instance : Application? = null
-        fun create() : Application {
-            val classes = Reflections("").getSubTypesOf(javaClass<Application>())
-            val app = classes?.first() //as Class<Application>
-            if(app == null)
-                instance = app!!.newInstance()
-            else
-                instance = Application()
+
+        class DefaultApplicationDiscovery : ApplicationDiscovery {
+
+            val logger = LoggerFactory.getLogger("Kontinuous.Application");
+
+            override fun find(): Class<out Application> {
+                val classes = Reflections("").getSubTypesOf(javaClass<Application>())
+                if(classes == null) {
+                    throw RuntimeException("User Application class not found!")
+                }
+                if(classes.size() != 1) {
+                    logger.error("Founded ${classes.size()} User Applications.")
+                    logger.error("Default application discoverer expects exactly one User Application class.")
+                    logger.error("List of finded User Application classes:")
+                    for(applicationClass in classes) {
+                        logger.error(applicationClass.getCanonicalName())
+                    }
+                    logger.error("Please remove unused User Application or provide custom appliction discoverer")
+                    throw RuntimeException("Founded ${classes.size()} User Applications.")
+                }
+
+                return classes.first()
+            }
+        }
+
+        var instance: Application? = null
+
+        fun create(discovery: ApplicationDiscovery = DefaultApplicationDiscovery()): Application {
+            val app = discovery.find()
+            instance = app.newInstance()
             return instance!!
         }
     }
