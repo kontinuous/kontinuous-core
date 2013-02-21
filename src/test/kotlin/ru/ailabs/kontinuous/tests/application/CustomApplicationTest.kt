@@ -26,10 +26,11 @@ object ExampleSession {
 }
 
 class CustomApplication : Application() {
-    override fun configure(init: Configuration.() -> Unit): Configuration
-            = configuration {
+    {
+        new {
             initialize { ExampleSession.initalize() }
         }
+    }
 }
 
 class CustomApplicationTest {

@@ -40,12 +40,14 @@ object Controller {
 }
 
 class TestApplication: Application() {
-    override fun configure(init: Configuration.() -> Unit): Configuration
-            = configuration {
-        get("/", Controller.index)
-        post("/post", Controller.post_m)
-        get("/post", Controller.post)
-        get("/post/:name", Controller.show_post)
+    {
+        new {
+            get("/", Controller.index)
+            post("/post", Controller.post_m)
+            get("/post", Controller.post)
+            get("/post/:name", Controller.show_post)
+        }
+        initialize()
     }
 }
 

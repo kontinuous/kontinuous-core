@@ -16,7 +16,9 @@ import java.util.HashSet
 import ru.ailabs.kontinuous.logger.LoggerFactory
 import ru.ailabs.kontinuous.configuration.Method
 
-class ControllerDispatcher(val routes: Map<String, Set<Method>>) {
+class ControllerDispatcher() {
+
+    var routes: Map<String, Set<Method>> = HashMap<String, Set<Method>>()
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.controller.ControllerDispatcher")
 

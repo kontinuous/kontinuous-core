@@ -23,17 +23,18 @@ object ExampleSession {
 }
 
 class TestApplication : Application() {
-    override fun configure(init: Configuration.() -> Unit): Configuration
-            = configuration {
+    {
+        new {
             initialize { ExampleSession.initalize() }
         }
+    }
 }
 
 class InitializersTest {
 
     Test fun testInitializer() : Unit {
         assertFalse(ExampleSession.initialized)
-        TestApplication()
+        TestApplication().initialize()
         assertTrue(ExampleSession.initialized)
     }
 }

@@ -39,6 +39,7 @@ class UrlMatcher(val urlTemplate : String) {
     } ()
 
     fun match(val url : String) : Result {
+        logger.debug("Url: ${url}")
         val result = HashMap<String, String>()
         val matcher = Pattern.compile(matching.paramsPattern).matcher(url)
         val it = matching.params.iterator();

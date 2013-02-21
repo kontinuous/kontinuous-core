@@ -11,6 +11,7 @@ import org.reflections.util.ConfigurationBuilder
 import ru.ailabs.kontinuous.configuration.Configuration
 import ru.ailabs.kontinuous.configuration.configuration
 import ru.ailabs.kontinuous.persistance.HibernateSession
+import ru.ailabs.kontinuous.controller.AssetController
 
 //import ru.ailabs.kontinuous.configuration.Configuration
 //import ru.ailabs.kontinuous.configuration
@@ -60,17 +61,19 @@ open class Application() {
         fun create(discovery: ApplicationDiscovery = DefaultApplicationDiscovery()): Application {
             val app = discovery.find()
             instance = app.newInstance()
+            instance?.initialize()
             return instance!!
         }
     }
 
     val logger = LoggerFactory.getLogger("Kontinuous.Application");
 
-    val conf = configure()
-    val dispatcher = ControllerDispatcher(conf.routes)
+    var conf = configure()
+
+    val dispatcher = ControllerDispatcher()
     val properties = Properties();
 
-    {
+    fun initialize() {
         val stream = javaClass.getClassLoader()!!.getResourceAsStream("config/application.properties")
         if (stream != null) {
             properties.load(stream)
@@ -78,13 +81,21 @@ open class Application() {
         for (initializer in conf.initializers) {
             initializer()
         }
+        dispatcher.routes = conf.routes
     }
 
-    open fun configure(init: Configuration.() -> Unit = {}) : Configuration  = configuration {
+    fun add(init: Configuration.() -> Unit) {
+        conf.init()
+    }
+    fun new(init: Configuration.() -> Unit) {
+        conf = configuration { init() }
+    }
+
+    private fun configure() : Configuration  = configuration {
         initialize {
             HibernateSession.init(this)
         }
-        init()
+        get("/assets/*file", AssetController.at)
     }
 
     fun getProperty(val name: String, val default: String? = null) : String? {

@@ -18,7 +18,7 @@ class HibernateSessionTest {
 
     Test fun testSessionInitialization() : Unit {
         assertFalse(HibernateSession.initialized())
-        Application()
+        Application().initialize()
         assertTrue(HibernateSession.initialized())
     }
 }
