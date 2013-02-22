@@ -15,4 +15,5 @@ class RequestHeader(val keepAlive: Boolean,
                     val path: String,
                     val method: HttpMethod,
                     val parameters: Map<String, List<String>>,
-                    val headers: List<Map<String, String>>)
+                    val headers: List<Map<String, String>>,
+                    val cookies: Map<String, Cookie>)
