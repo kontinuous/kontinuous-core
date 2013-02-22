@@ -63,7 +63,8 @@ class ControllerDispatcherTest {
                 path = "/",
                 method = HttpMethod.GET,
                 parameters = hashMapOf(),
-                headers = listOf()
+                headers = listOf(),
+                cookies = hashMapOf()
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Controller.index, actionHandler.action)
@@ -77,7 +78,8 @@ class ControllerDispatcherTest {
                 path = "/post",
                 method = HttpMethod.GET,
                 parameters = hashMapOf(),
-                headers = listOf()
+                headers = listOf(),
+                cookies = hashMapOf()
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Controller.post, actionHandler.action)
@@ -91,7 +93,8 @@ class ControllerDispatcherTest {
                 path = "/asd",
                 method = HttpMethod.GET,
                 parameters = hashMapOf(),
-                headers = listOf()
+                headers = listOf(),
+                cookies = hashMapOf()
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Action404, actionHandler.action)
@@ -105,7 +108,8 @@ class ControllerDispatcherTest {
                 path = "/post/megapost",
                 method = HttpMethod.GET,
                 parameters = hashMapOf(),
-                headers = listOf()
+                headers = listOf(),
+                cookies = hashMapOf()
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Controller.show_post, actionHandler.action)
@@ -119,7 +123,8 @@ class ControllerDispatcherTest {
                 path = "/post",
                 method = HttpMethod.POST,
                 parameters = hashMapOf(),
-                headers = listOf()
+                headers = listOf(),
+                cookies = hashMapOf()
         )
         val actionHandler = dispatcher.findActionHandler(request)
         assertEquals(Controller.post_m, actionHandler.action)

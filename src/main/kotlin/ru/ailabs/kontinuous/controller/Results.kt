@@ -14,7 +14,8 @@ class ResponseHeader(val status: Int, val headers: MutableMap<String, String> = 
 }
 
 trait WithHeaders {
-    fun withHeaders(headers: MutableMap<String, String>)
+    fun withHeaders(headers: MutableMap<String, String>): WithHeaders
+    fun withCookies(vararg cookies: Cookie): WithHeaders
 }
 
 trait HttpResult {
@@ -26,8 +27,13 @@ fun emptyBody(): String {
 }
 
 open class SimpleResult(val header: ResponseHeader, val body: Any) : HttpResult, WithHeaders {
-    override fun withHeaders(headers: MutableMap<String, String>) {
+    override fun withCookies(vararg cookies: Cookie): SimpleResult {
+        withHeaders(hashMapOf(HttpHeaderNames.SET_COOKIE to Cookies.merge(header.headers.getOrElse(HttpHeaderNames.SET_COOKIE, {""}), cookies.toSet())))
+        return this
+    }
+    override fun withHeaders(headers: MutableMap<String, String>): SimpleResult {
         header.headers.putAll(headers)
+        return this
     }
 }
 

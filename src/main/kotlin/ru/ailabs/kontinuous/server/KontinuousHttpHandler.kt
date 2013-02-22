@@ -44,6 +44,7 @@ import org.jboss.netty.channel.ChannelFutureListener
 import org.jboss.netty.channel.ChannelFutureProgressListener
 import org.jboss.netty.channel.DefaultFileRegion
 import ru.ailabs.kontinuous.initializer.Application
+import ru.ailabs.kontinuous.controller.Cookie
 
 /**
  * Alien Invaders Ltd.
@@ -71,6 +72,18 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 val path = requestUri.getPath()
 
                 val headers = nettyHttpRequest.getHeaders()
+                val cookies = {
+                    val cookieDecoder = CookieDecoder()
+                    val cookieHeaders = nettyHttpRequest.getHeaders(HttpHeaderNames.COOKIE)
+                    val cookies = cookieHeaders!!.fold(hashMapOf<String, Cookie>()) { map, cookieHeader ->
+                         CookieDecoder().decode(cookieHeader)!!.fold(map) { map, c ->
+                             map.put(c.getName()!!, Cookie(c.getName()!!, c.getValue()!!))
+                             map
+                         }
+                         map
+                    }
+                    cookies
+                }
 
                 val kontinuousRequest = RequestHeader(
                         keepAlive = keepAlive,
@@ -79,7 +92,8 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                         path = path!!,
                         method = nettyHttpRequest.getMethod()!!,
                         parameters = requestParams as Map<String, List<String>>,
-                        headers = headers as List<Map<String, String>>
+                        headers = headers as List<Map<String, String>>,
+                        cookies = cookies()
                 )
 
                 val actionHandler = dispatcher.findActionHandler(kontinuousRequest)
@@ -111,6 +125,10 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
             }
         }
+    }
+
+    fun getCookies() {
+
     }
 
     public override fun exceptionCaught(ctx: ChannelHandlerContext?, e: ExceptionEvent?) {
