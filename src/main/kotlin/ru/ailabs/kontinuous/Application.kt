@@ -96,9 +96,9 @@ open class Application() {
         initialize {
             HibernateSession.init(this)
         }
-        authenticated("/login") {
+//        authenticated("/login") {
             get("/assets/*file", AssetController.at)
-        }
+//        }
     }
 
     fun getProperty(val name: String, val default: String? = null) : String? {

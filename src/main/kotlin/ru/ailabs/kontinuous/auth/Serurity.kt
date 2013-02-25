@@ -8,6 +8,7 @@ import ru.ailabs.kontinuous.controller.Action
 import ru.ailabs.kontinuous.configuration.Get
 import ru.ailabs.kontinuous.configuration.Post
 import ru.ailabs.kontinuous.controller.Redirect
+import ru.ailabs.kontinuous.controller.Cookies
 
 /**
  * User: andrew
@@ -29,7 +30,7 @@ class AuthenticatedConfiguration(val login: String, val routes: HashMap<String, 
 
     private fun wrap(action: Action) : Action =
         Action({ ctx ->
-            if(!ctx.authenticated)
+            if(ctx.requestHeaders.cookies.get(Cookies.userId) == null)
                 Redirect(login)
             else
                 action.handler(ctx)

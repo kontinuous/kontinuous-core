@@ -73,7 +73,7 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
 
                 val headers = nettyHttpRequest.getHeaders()
                 val cookies = {
-                    val cookieDecoder = CookieDecoder()
+//                    val cookieDecoder = CookieDecoder()
                     val cookieHeaders = nettyHttpRequest.getHeaders(HttpHeaderNames.COOKIE)
                     val cookies = cookieHeaders!!.fold(hashMapOf<String, Cookie>()) { map, cookieHeader ->
                          CookieDecoder().decode(cookieHeader)!!.fold(map) { map, c ->
@@ -105,7 +105,11 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                     bytes
                 }
 
-                val context = Context(actionHandler.namedParams, HibernateSession.sessionFactory!!.openSession()!!, body())
+                val context = Context(
+                        actionHandler.namedParams,
+                        HibernateSession.sessionFactory!!.openSession()!!,
+                        body(),
+                        kontinuousRequest)
                 val tx = context.session.beginTransaction();
                 val actionResult = try {
                      actionHandler.action.handler(context)

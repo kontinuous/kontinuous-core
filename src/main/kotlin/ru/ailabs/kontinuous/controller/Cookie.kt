@@ -14,6 +14,9 @@ class Cookie(val name: String, val value: String, val maxAge: Int = -1, val path
 
 object Cookies {
 
+    val userId = "USER_ID"
+    val sessionId = "SESSION_ID"
+
     fun encode(cookies: Set<Cookie>): String {
         val encoder = CookieEncoder(true)
         val newCookies = cookies.map { c ->
