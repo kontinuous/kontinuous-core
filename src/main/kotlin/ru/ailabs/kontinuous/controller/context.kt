@@ -14,4 +14,5 @@ import org.hibernate.Session
  */
 
 public open class Context(val namedParameters : Map<String, String>, val session : Session, val body: ByteArray) {
+    val authenticated: Boolean = false;
 }
