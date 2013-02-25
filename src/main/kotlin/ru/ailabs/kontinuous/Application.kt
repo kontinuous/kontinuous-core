@@ -72,7 +72,7 @@ open class Application() {
     var conf = configure()
 
     val dispatcher = ControllerDispatcher()
-    val properties = Properties();
+    public val properties: Properties = Properties();
 
     fun initialize() {
         val stream = javaClass.getClassLoader()!!.getResourceAsStream("config/application.properties")
