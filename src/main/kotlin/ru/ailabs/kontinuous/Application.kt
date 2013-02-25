@@ -12,6 +12,7 @@ import ru.ailabs.kontinuous.configuration.Configuration
 import ru.ailabs.kontinuous.configuration.configuration
 import ru.ailabs.kontinuous.persistance.HibernateSession
 import ru.ailabs.kontinuous.controller.AssetController
+import ru.ailabs.kontinuous.auth.*
 
 //import ru.ailabs.kontinuous.configuration.Configuration
 //import ru.ailabs.kontinuous.configuration
@@ -95,7 +96,9 @@ open class Application() {
         initialize {
             HibernateSession.init(this)
         }
-        get("/assets/*file", AssetController.at)
+//        authenticated("/login") {
+            get("/assets/*file", AssetController.at)
+//        }
     }
 
     fun getProperty(val name: String, val default: String? = null) : String? {
