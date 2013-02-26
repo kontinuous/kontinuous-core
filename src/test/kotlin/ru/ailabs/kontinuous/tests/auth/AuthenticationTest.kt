@@ -27,6 +27,7 @@ import ru.ailabs.kontinuous.controller.Cookies
 import ru.ailabs.kontinuous.controller.Cookie
 import org.hibernate.Session
 import org.mockito.Mockito.mock
+import ru.ailabs.kontinuous.controller.KontinuousSession
 
 object Controller {
     val secured = Action ({
@@ -61,7 +62,7 @@ class ControllerDispatcherTest {
                 headers = listOf(),
                 cookies = hashMapOf()
         )
-        val context = Context(hashMapOf(), mock(javaClass<Session>())!!, ByteArray(1), request)
+        val context = Context(hashMapOf<String, String>(), mock(javaClass<Session>())!!, KontinuousSession(), ByteArray(1), request)
         val actionHandler = dispatcher.findActionHandler(request)
         val result = actionHandler.action.handler(context)
         assertTrue(result is Redirect)
@@ -79,7 +80,7 @@ class ControllerDispatcherTest {
                 headers = listOf(),
                 cookies = hashMapOf(Cookies.userId to Cookie(Cookies.userId, "123"))
         )
-        val context = Context(hashMapOf(), mock(javaClass<Session>())!!, ByteArray(1), request)
+        val context = Context(hashMapOf<String, String>(), mock(javaClass<Session>())!!, KontinuousSession(), ByteArray(1), request)
         val actionHandler = dispatcher.findActionHandler(request)
         val result = actionHandler.action.handler(context)
         assertTrue(result is Ok)

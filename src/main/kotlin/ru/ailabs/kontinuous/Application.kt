@@ -72,7 +72,7 @@ open class Application() {
     var conf = configure()
 
     val dispatcher = ControllerDispatcher()
-    val properties = Properties();
+    public val properties: Properties = Properties();
 
     fun initialize() {
         val stream = javaClass.getClassLoader()!!.getResourceAsStream("config/application.properties")
@@ -92,7 +92,7 @@ open class Application() {
         conf = configuration { init() }
     }
 
-    private fun configure() : Configuration  = configuration {
+    open protected fun configure() : Configuration  = configuration {
         initialize {
             HibernateSession.init(this)
         }
