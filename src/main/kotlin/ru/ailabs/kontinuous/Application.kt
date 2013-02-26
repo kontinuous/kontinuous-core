@@ -92,7 +92,7 @@ open class Application() {
         conf = configuration { init() }
     }
 
-    private fun configure() : Configuration  = configuration {
+    open protected fun configure() : Configuration  = configuration {
         initialize {
             HibernateSession.init(this)
         }

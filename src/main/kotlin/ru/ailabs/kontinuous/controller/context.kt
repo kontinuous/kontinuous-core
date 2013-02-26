@@ -16,6 +16,7 @@ import org.hibernate.Session
 public open class Context(
         val namedParameters : Map<String, String>,
         val session : Session,
+        val userSession: KontinuousSession,
         val body: ByteArray,
         val requestHeaders: RequestHeader) {
 }

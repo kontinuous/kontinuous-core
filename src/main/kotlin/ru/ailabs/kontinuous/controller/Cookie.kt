@@ -50,7 +50,7 @@ object Cookies {
     }
 }
 
-class CookieFolding {
+open class CookieFolding {
 
     var isSigned = true
 

@@ -45,6 +45,7 @@ import org.jboss.netty.channel.ChannelFutureProgressListener
 import org.jboss.netty.channel.DefaultFileRegion
 import ru.ailabs.kontinuous.initializer.Application
 import ru.ailabs.kontinuous.controller.Cookie
+import ru.ailabs.kontinuous.controller.KontinuousSession
 
 /**
  * Alien Invaders Ltd.
@@ -57,6 +58,8 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.server.KontinuousHttpHandler")
 
     val dispatcher = Application.instance!!.dispatcher
+
+    val KONTINUOUS_SESSION_COOKIE = "_kontinuous_session"
 
     public override fun messageReceived(ctx: ChannelHandlerContext?, e: MessageEvent?) {
         val nettyHttpRequest = e?.getMessage()
@@ -105,9 +108,16 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                     bytes
                 }
 
+                val sessionCookie = kontinuousRequest.cookies.get(KONTINUOUS_SESSION_COOKIE)
+                val userSession =  KontinuousSession()
+                if(sessionCookie != null) {
+                    userSession.deserialize(sessionCookie.value)
+                }
+
                 val context = Context(
                         actionHandler.namedParams,
                         HibernateSession.sessionFactory!!.openSession()!!,
+                        userSession,
                         body(),
                         kontinuousRequest)
                 val tx = context.session.beginTransaction();
@@ -121,7 +131,12 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                 }
 
                 when (actionResult) {
-                    is SimpleResult -> writeResponse(e!!, nettyHttpRequest, actionResult)
+                    is SimpleResult -> {
+                        if(userSession.isDirty()) {
+                            actionResult.withCookies(Cookie(KONTINUOUS_SESSION_COOKIE, userSession.serialize()))
+                        }
+                        writeResponse(e!!, nettyHttpRequest, actionResult)
+                    }
                     else -> logger.warn("unknown action result ${actionResult}");
                 }
             }
