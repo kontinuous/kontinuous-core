@@ -35,8 +35,9 @@ fun main(args: Array<String>) {
         val strRead = br.readLine()
         if(strRead != null) {
             if(strRead.length() >0) {
-                if (strRead in commandMap.keySet()){
-                    if (commandMap.get(strRead)!!.execute()){
+                val com = commandMap.get(strRead)
+                if (com!=null){
+                    if (com.execute()){
                         continue
                     } else {
                         println("Command run error!")
