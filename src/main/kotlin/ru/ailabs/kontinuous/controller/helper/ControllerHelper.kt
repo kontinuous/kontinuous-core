@@ -33,7 +33,7 @@ public fun ByteArray.asMap() : Map<String, String> =
     })
 
 
-public fun ByteArray.asJson(clazz: Class<Any>) : Any? {
+public fun <T> ByteArray.asJson(clazz: Class<T>) : T? {
     val mapper = ObjectMapper()
     return mapper.readValue(this, clazz)
 }
