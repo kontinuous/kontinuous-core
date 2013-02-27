@@ -9,25 +9,24 @@
 package ru.ailabs.kontinuous.tests.auth
 
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import org.hibernate.Session
 import org.jboss.netty.handler.codec.http.HttpMethod
 import org.jboss.netty.handler.codec.http.HttpVersion
 import org.junit.Test
+import org.mockito.Mockito.mock
 import ru.ailabs.kontinuous.auth.authenticated
 import ru.ailabs.kontinuous.controller.Action
-import ru.ailabs.kontinuous.controller.Action404
+import ru.ailabs.kontinuous.controller.Context
+import ru.ailabs.kontinuous.controller.Cookie
+import ru.ailabs.kontinuous.controller.Cookies
+import ru.ailabs.kontinuous.controller.HttpHeaderNames
+import ru.ailabs.kontinuous.controller.KontinuousSession
 import ru.ailabs.kontinuous.controller.Ok
+import ru.ailabs.kontinuous.controller.Redirect
 import ru.ailabs.kontinuous.controller.RequestHeader
 import ru.ailabs.kontinuous.controller.helper.render
 import ru.ailabs.kontinuous.initializer.Application
-import ru.ailabs.kontinuous.controller.Redirect
-import kotlin.test.assertTrue
-import ru.ailabs.kontinuous.controller.Context
-import ru.ailabs.kontinuous.controller.HttpHeaderNames
-import ru.ailabs.kontinuous.controller.Cookies
-import ru.ailabs.kontinuous.controller.Cookie
-import org.hibernate.Session
-import org.mockito.Mockito.mock
-import ru.ailabs.kontinuous.controller.KontinuousSession
 
 object Controller {
     val secured = Action ({
@@ -47,7 +46,7 @@ class TestApplication: Application() {
 }
 
 
-class ControllerDispatcherTest {
+class AuthenticationTest {
 
     val dispatcher = TestApplication().dispatcher
 

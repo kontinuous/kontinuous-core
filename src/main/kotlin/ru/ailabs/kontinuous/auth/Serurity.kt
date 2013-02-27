@@ -9,6 +9,7 @@ import ru.ailabs.kontinuous.configuration.Get
 import ru.ailabs.kontinuous.configuration.Post
 import ru.ailabs.kontinuous.controller.Redirect
 import ru.ailabs.kontinuous.controller.Cookies
+import ru.ailabs.kontinuous.controller.KontinuousSession
 
 /**
  * User: andrew
@@ -16,7 +17,7 @@ import ru.ailabs.kontinuous.controller.Cookies
  * Time: 13:37
  */
 
-class AuthenticatedConfiguration(val login: String, val routes: HashMap<String, HashSet<Method>>) {
+abstract class AuthenticatedConfiguration(val routes: HashMap<String, HashSet<Method>>) {
 
     fun get(path: String, action: Action) {
         val route = Get(path, wrap(action))
@@ -28,17 +29,54 @@ class AuthenticatedConfiguration(val login: String, val routes: HashMap<String, 
         routes.getOrPut(route.method, { hashSetOf<Method>() }).add(route)
     }
 
-    private fun wrap(action: Action) : Action =
+    protected fun wrap(action: Action) : Action =
         Action({ ctx ->
-            if(ctx.requestHeaders.cookies.get(Cookies.userId) == null)
-                Redirect(login)
+            if(!ctx.userSession.isAuthenticated())
+                loginAction.handler(ctx)//Redirect(login)
             else
                 action.handler(ctx)
         })
+
+    protected abstract val loginAction: Action
+}
+
+class RedirectAuthenticatedConfiguration(redirect: String, routes: HashMap<String, HashSet<Method>>) :
+AuthenticatedConfiguration(routes) {
+    protected override val loginAction: Action = Action({
+        Redirect(redirect)
+    })
+}
+
+class ActionAuthenticatedConfiguration(action: Action, routes: HashMap<String, HashSet<Method>>) :
+AuthenticatedConfiguration(routes) {
+    protected override val loginAction: Action = action
 }
 
 
-fun Configuration.authenticated(login: String, init: AuthenticatedConfiguration.() -> Unit) {
-    val conf = AuthenticatedConfiguration(login, routes)
+public fun Configuration.authenticated(redirect: String, init: AuthenticatedConfiguration.() -> Unit) {
+    val conf = RedirectAuthenticatedConfiguration(redirect, routes)
     conf.init()
+}
+
+public fun Configuration.authenticated(action: Action, init: AuthenticatedConfiguration.() -> Unit) {
+    val conf = ActionAuthenticatedConfiguration(action, routes)
+    conf.init()
+}
+
+public val paramUserId: String = "USER_ID"
+
+fun KontinuousSession.authenticate(userId: String) {
+    set(paramUserId, userId)
+}
+
+fun KontinuousSession.unauthenticate() : Boolean {
+    return remove(paramUserId) != null
+}
+
+fun KontinuousSession.isAuthenticated() : Boolean {
+    return get(paramUserId) != null
+}
+
+fun KontinuousSession.getUserId() : String? {
+    return get(paramUserId)
 }

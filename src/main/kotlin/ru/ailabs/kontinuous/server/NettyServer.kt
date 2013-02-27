@@ -16,6 +16,9 @@ import java.net.InetSocketAddress
 import ru.ailabs.kontinuous.server.KontinuousHttpHandler
 import ru.ailabs.kontinuous.logger.LoggerFactory
 import ru.ailabs.kontinuous.initializer.Application
+import ru.ailabs.kontinuous.initializer.Application.DefaultApplicationDiscovery
+import ru.ailabs.kontinuous.initializer.ApplicationDiscovery
+import org.jboss.netty.channel.Channel
 
 
 /**
@@ -49,7 +52,7 @@ class HttpServerPipelineFactory : ChannelPipelineFactory {
 
 }
 
-class NettyServer {
+class NettyServer(val discovery: ApplicationDiscovery = DefaultApplicationDiscovery()) {
 
     val logger = LoggerFactory.getLogger("Netty")
 
@@ -62,15 +65,21 @@ class NettyServer {
         )
     )
 
+    var channel: Channel? = null
+
     fun start() {
         val port = 8080;
 
         serverBootstrap.setPipelineFactory(HttpServerPipelineFactory());
 
-        serverBootstrap.bind(InetSocketAddress(port));
+        channel = serverBootstrap.bind(InetSocketAddress(port));
 
-        application = Application.create()
+        application = Application.create(discovery)
 
         logger.info("Listening for HTTP on ${port}")
+    }
+
+    fun stop() {
+        channel!!.disconnect()
     }
 }

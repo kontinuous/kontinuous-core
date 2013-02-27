@@ -151,6 +151,7 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
     }
 
     public override fun exceptionCaught(ctx: ChannelHandlerContext?, e: ExceptionEvent?) {
+        logger.error("Something bad has occurred: ", e?.getCause())
         val response = DefaultHttpResponse(HTTP_1_1, HttpResponseStatus.INTERNAL_SERVER_ERROR);
 
         val output = ByteArrayOutputStream()

@@ -25,6 +25,11 @@ class KontinuousSession(val values: MutableMap<String, String> = hashMapOf()) : 
         values.put(key, value)
     }
 
+    fun remove(key: String): String? {
+        dirty = true
+        return values.remove(key)
+    }
+
     fun serialize(): String = encode(values)
     fun deserialize(input: String) {
         dirty = false
