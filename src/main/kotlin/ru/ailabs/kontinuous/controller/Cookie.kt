@@ -4,7 +4,6 @@ import org.jboss.netty.handler.codec.http.CookieDecoder
 import org.jboss.netty.handler.codec.http.CookieEncoder
 import org.jboss.netty.handler.codec.http.DefaultCookie
 import ru.ailabs.kontinuous.krypto.Kryptos
-import kotlin.nullable.filterNot
 
 /**
  * Alien Invaders Ltd.

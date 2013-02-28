@@ -36,12 +36,12 @@ object HibernateSession {
 
         try {
             config = config!!.configure()
-        } catch (val e : HibernateException) {
+        } catch (e : HibernateException) {
             logger.warn(e.getMessage(), e)
         } finally {
             val factory = try {
                 config!!.buildSessionFactory()
-            } catch (val e : Exception) {
+            } catch (e : Exception) {
                 logger.error(e.getMessage(), e)
                 null
             }

@@ -34,7 +34,7 @@ object UIController {
 
     val loginPost = Action ({ ctx ->
 
-        println("Header cookies: " + ctx.requestHeaders.cookies.keySet().fold("", {s, m -> s + ";" + m}))
+        println("Header cookies: " + ctx.requestHeaders.cookies.keySet().fold("", { s, m -> s + ";" + m }))
 
         val form = ctx.body.asMap()
 
@@ -108,24 +108,24 @@ class UIAuthenticationTest {
 
     Test fun shouldHaveCookie() {
         driver.get("http://localhost:8080/login")
-        println("Cookies: " + driver.manage()?.getCookies()?.fold("", {s, c -> s + ";" + c.getName()}))
+        println("Cookies: " + driver.manage()!!.getCookies()!!.fold("", { s, c -> val ss = s + ";" + c.getName(); ss; }))
         assertNotNull(driver.manage()?.getCookieNamed("id"))
         driver.get("http://localhost:8080/redirect2")
-        println("Cookies: " + driver.manage()?.getCookies()?.fold("", {s, c -> s + ";" + c.getName()}))
+        println("Cookies: " + driver.manage()!!.getCookies()!!.fold("", { s, c -> s + ";" + c.getName() }))
         assertNotNull(driver.manage()?.getCookieNamed("id2"))
     }
 
-    Test fun shouldBeLoggedIn() {
-        driver.get("http://localhost:8080/secured")
-        val elemName = driver.findElement(By.name("user"))
-        elemName?.sendKeys("user")
-        val elemPass = driver.findElement(By.name("pass"))
-        elemPass?.sendKeys("password")
-        val elemSubmit = driver.findElement(By.name("submit"))
-        elemSubmit?.submit()
-        println("Cookies: " + driver.manage()?.getCookies()?.fold("", {s, c -> s + ";" + c.getName()}))
-        assertNotNull(driver.manage()?.getCookieNamed("_kontinuous_session"))
-        assertEquals("http://localhost:8080/secured", driver.getCurrentUrl())
-        assertTrue(driver.getPageSource()!!.contains("Hello Test passed!!!!"))
-    }
+        Test fun shouldBeLoggedIn() {
+            driver.get("http://localhost:8080/secured")
+            val elemName = driver.findElement(By.name("user"))
+            elemName?.sendKeys("user")
+            val elemPass = driver.findElement(By.name("pass"))
+            elemPass?.sendKeys("password")
+            val elemSubmit = driver.findElement(By.name("submit"))
+            elemSubmit?.submit()
+            println("Cookies: " + driver.manage()!!.getCookies()!!.fold("", {s, c -> s + ";" + c.getName()}))
+            assertNotNull(driver.manage()?.getCookieNamed("_kontinuous_session"))
+            assertEquals("http://localhost:8080/secured", driver.getCurrentUrl())
+            assertTrue(driver.getPageSource()!!.contains("Hello Test passed!!!!"))
+        }
 }

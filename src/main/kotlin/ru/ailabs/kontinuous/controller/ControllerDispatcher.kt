@@ -24,7 +24,7 @@ class ControllerDispatcher() {
 
     val viewResolver = ViewResolver()
 
-    private fun findAction(val path: String, val method: String): ActionHandler {
+    private fun findAction(path: String, method: String): ActionHandler {
         val mapping = routes.get(method.toUpperCase())
         return if (mapping != null) {
             val pair = mapping map { Pair(it.matcher.match(path), it.action) } find {it.first.matched}
@@ -41,7 +41,7 @@ class ControllerDispatcher() {
         }
     }
 
-    fun findActionHandler(val requestHeader: RequestHeader): ActionHandler {
+    fun findActionHandler(requestHeader: RequestHeader): ActionHandler {
         val path = requestHeader.path
         return findAction(path, requestHeader.method.getName()!!)
     }

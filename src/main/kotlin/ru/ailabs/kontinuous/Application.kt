@@ -4,7 +4,6 @@ import org.reflections.Reflections
 import ru.ailabs.kontinuous.controller.ControllerDispatcher
 import java.util.HashSet
 import java.util.Properties
-import ru.ailabs.kontinuous.annotation.AnnotationScanner
 import ru.ailabs.kontinuous.logger.LoggerFactory
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
@@ -101,7 +100,7 @@ open class Application() {
 //        }
     }
 
-    fun getProperty(val name: String, val default: String? = null) : String? {
+    fun getProperty(name: String, default: String? = null) : String? {
         return properties.getProperty(name, default)
     }
 
