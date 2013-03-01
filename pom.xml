@@ -102,6 +102,14 @@
             <artifactId>xercesImpl</artifactId>
             <version>2.10.0</version>
         </dependency>
+        <!-- check for http://youtrack.jetbrains.com/issue/KT-3292 -->
+        <dependency>
+            <groupId>java</groupId>
+            <artifactId>jce</artifactId>
+            <scope>system</scope>
+            <version>1.7</version>
+            <systemPath>${java.home}/lib/jce.jar</systemPath>
+        </dependency>        
 
     </dependencies>
 
