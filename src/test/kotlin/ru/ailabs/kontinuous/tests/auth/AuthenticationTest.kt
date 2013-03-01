@@ -77,9 +77,9 @@ class AuthenticationTest {
                 method = HttpMethod.GET,
                 parameters = hashMapOf(),
                 headers = listOf(),
-                cookies = hashMapOf(Cookies.userId to Cookie(Cookies.userId, "123"))
+                cookies = hashMapOf()
         )
-        val context = Context(hashMapOf<String, String>(), mock(javaClass<Session>())!!, KontinuousSession(), ByteArray(1), request)
+        val context = Context(hashMapOf<String, String>(), mock(javaClass<Session>())!!, KontinuousSession(hashMapOf(Cookies.userId to "123")), ByteArray(1), request)
         val actionHandler = dispatcher.findActionHandler(request)
         val result = actionHandler.action.handler(context)
         assertTrue(result is Ok)

@@ -17,8 +17,7 @@ import ru.ailabs.kontinuous.persistance.HibernateSession
 class HibernateSessionTest {
 
     Test fun testSessionInitialization() {
-        assertFalse(HibernateSession.initialized())
-        Application().initialize()
-        assertTrue(HibernateSession.initialized())
+        val app = Application()
+        HibernateSession.init(app)
     }
 }
