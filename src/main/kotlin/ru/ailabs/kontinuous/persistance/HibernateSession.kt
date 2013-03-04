@@ -31,8 +31,8 @@ object HibernateSession {
         defaultProperties.setProperty("hibernate.connection.url", DEFAULT_DB_URL)
 
         var config = Configuration()
-                .mergeProperties(defaultProperties)!!
-                .mergeProperties(app.properties)
+                .mergeProperties(app.properties)!!
+                .mergeProperties(defaultProperties)
 
         try {
             config = config!!.configure()
