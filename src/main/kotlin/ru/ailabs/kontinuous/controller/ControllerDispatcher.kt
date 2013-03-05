@@ -18,7 +18,7 @@ import ru.ailabs.kontinuous.configuration.Method
 
 class ControllerDispatcher() {
 
-    var routes: Map<String, Set<Method>> = HashMap<String, Set<Method>>()
+    var routes = HashMap<String, List<Method>>()
 
     val logger = LoggerFactory.getLogger("ru.ailabs.kontinuous.controller.ControllerDispatcher")
 

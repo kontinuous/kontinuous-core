@@ -30,17 +30,17 @@ class Configuration {
 
     private val logger = LoggerFactory.getLogger(javaClass<Configuration>())
 
-    val routes = HashMap<String, HashSet<Method>>()
+    val routes = HashMap<String, List<Method>>()
     val initializers = HashSet<Application.() -> Unit>()
 
     fun get(path: String, action: Action) {
         val route = Get(path, action)
-        routes.getOrPut(route.method, { hashSetOf<Method>() }).add(route)
+        routes.put(route.method, routes.getOrPut(route.method, { listOf<Method>() }) + route)
     }
 
     fun post(path: String, action: Action) {
         val route = Post(path, action)
-        routes.getOrPut(route.method, { hashSetOf<Method>() }).add(route)
+        routes.put(route.method, routes.getOrPut(route.method, { listOf<Method>() }) + route)
     }
 
     fun initialize(init: Application.() -> Unit) {

@@ -17,16 +17,16 @@ import ru.ailabs.kontinuous.controller.KontinuousSession
  * Time: 13:37
  */
 
-abstract class AuthenticatedConfiguration(val routes: HashMap<String, HashSet<Method>>) {
+abstract class AuthenticatedConfiguration(val routes: HashMap<String, List<Method>>) {
 
     fun get(path: String, action: Action) {
         val route = Get(path, wrap(action))
-        routes.getOrPut(route.method, { hashSetOf<Method>() }).add(route)
+        routes.put(route.method, routes.getOrPut(route.method, { listOf<Method>() }) + route)
     }
 
     fun post(path: String, action: Action) {
         val route = Post(path, wrap(action))
-        routes.getOrPut(route.method, { hashSetOf<Method>() }).add(route)
+        routes.put(route.method, routes.getOrPut(route.method, { listOf<Method>() }) + route)
     }
 
     protected fun wrap(action: Action) : Action =
@@ -40,14 +40,14 @@ abstract class AuthenticatedConfiguration(val routes: HashMap<String, HashSet<Me
     protected abstract val loginAction: Action
 }
 
-class RedirectAuthenticatedConfiguration(redirect: String, routes: HashMap<String, HashSet<Method>>) :
+class RedirectAuthenticatedConfiguration(redirect: String, routes: HashMap<String, List<Method>>) :
 AuthenticatedConfiguration(routes) {
     protected override val loginAction: Action = Action({
         Redirect(redirect)
     })
 }
 
-class ActionAuthenticatedConfiguration(action: Action, routes: HashMap<String, HashSet<Method>>) :
+class ActionAuthenticatedConfiguration(action: Action, routes: HashMap<String, List<Method>>) :
 AuthenticatedConfiguration(routes) {
     protected override val loginAction: Action = action
 }
