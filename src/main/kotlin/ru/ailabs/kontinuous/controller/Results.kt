@@ -39,6 +39,7 @@ open class SimpleResult(val header: ResponseHeader, val body: Any) : HttpResult,
 
 open class Status(val status: Int) : SimpleResult(header = ResponseHeader(HttpStatus.OK), body = emptyBody())
 
+class Forbidden : SimpleResult(header = ResponseHeader(status = HttpStatus.FORBIDDEN), body = emptyBody())
 class Ok(body: String) : SimpleResult(header = ResponseHeader(HttpStatus.OK), body = body)
 class NotFound(body: String = emptyBody()) : SimpleResult(header = ResponseHeader(status = HttpStatus.NOT_FOUND),
                                                           body = body)
