@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import ru.ailabs.kontinuous.initializer.Application
 import ru.ailabs.kontinuous.logger.LoggerFactory
+import org.hibernate.Session
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,11 @@ import ru.ailabs.kontinuous.logger.LoggerFactory
  * Time: 11:33
  * To change this template use File | Settings | File Templates.
  */
+
+class HibernateSessionInstance(factory: SessionFactory) {
+    val session = factory.openSession()!!
+    val tx = session.beginTransaction()!!;
+}
 
 object HibernateSession {
 
@@ -54,5 +60,15 @@ object HibernateSession {
 
     fun initialized() : Boolean {
         return sessionFactory != null
+    }
+
+    fun wrap<T>(func: HibernateSessionInstance.() -> T) : T {
+        val inst = HibernateSessionInstance(sessionFactory!!)
+        try{
+            return inst.func()
+        } finally {
+            inst.tx.commit();
+            inst.session.close();
+        }
     }
 }

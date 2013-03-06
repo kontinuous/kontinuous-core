@@ -8,6 +8,7 @@ import ru.ailabs.kontinuous.controller.UrlMatcher
 import ru.ailabs.kontinuous.initializer.Application
 import ru.ailabs.kontinuous.persistance.HibernateSession
 import ru.ailabs.kontinuous.logger.LoggerFactory
+import java.util.ArrayList
 
 //
 ///**
@@ -31,7 +32,7 @@ class Configuration {
     private val logger = LoggerFactory.getLogger(javaClass<Configuration>())
 
     val routes = HashMap<String, List<Method>>()
-    val initializers = HashSet<Application.() -> Unit>()
+    val initializers = ArrayList<Application.() -> Unit>()
 
     fun get(path: String, action: Action) {
         val route = Get(path, action)

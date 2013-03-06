@@ -114,20 +114,15 @@ class KontinuousHttpHandler : SimpleChannelUpstreamHandler() {
                     userSession.deserialize(sessionCookie.value)
                 }
 
-                val context = Context(
-                        actionHandler.namedParams,
-                        HibernateSession.sessionFactory!!.openSession()!!,
-                        userSession,
-                        body(),
-                        kontinuousRequest)
-                val tx = context.session.beginTransaction();
-                val actionResult = try {
-                     actionHandler.action.handler(context)
-                //} catch (val e : Exception) {
-                //    Action500(e).handler(context)
-                } finally {
-                    tx?.commit()
-                    context.session.close()
+                var actionResult: SimpleResult =
+                HibernateSession.wrap {
+                    val context = Context(
+                            actionHandler.namedParams,
+                            session,
+                            userSession,
+                            body(),
+                            kontinuousRequest)
+                    actionHandler.action.handler(context)
                 }
 
                 when (actionResult) {
