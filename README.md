@@ -31,7 +31,7 @@ Routes also described in the configuration:
 
 For Example:
 
- ```get("/assets/*file", AssetController.at)```
+```get("/assets/*file", AssetController.at)```
 
 ### Persistence
 Now persistance layer based on Hibernate
@@ -40,9 +40,9 @@ Hibernate session available from request object inside action
 ### Authentication
 It's made as extension of configuration DSL, request object and in future it will be extracted into plugin:
 
-        ```authenticated("/login") {
-            get("/assets/*file", AssetController.at)
-        }```
+```authenticated("/login") {
+    get("/assets/*file", AssetController.at)
+}```
 
 ### View Templates
 It's just groovy templates
