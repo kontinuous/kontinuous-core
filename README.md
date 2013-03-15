@@ -22,7 +22,8 @@ Configuration of routes, initializers, authentication (in future any other setti
 It's an section of configuration where user can initialize anything while server is starting
 For Example:
 
-```initialize {
+```java
+initialize {
             HibernateSession.init(this)
         }
 ```
@@ -32,7 +33,8 @@ Routes also described in the configuration:
 
 For Example:
 
-```get("/assets/*file", AssetController.at)
+```java
+get("/assets/*file", AssetController.at)
 ```
 
 ### Persistence
@@ -42,7 +44,8 @@ Hibernate session available from request object inside action
 ### Authentication
 It's made as extension of configuration DSL, request object and in future it will be extracted into plugin:
 
-```authenticated("/login") {
+```java
+authenticated("/login") {
         get("/assets/*file", AssetController.at)
 }
 ```
