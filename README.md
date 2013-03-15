@@ -21,13 +21,16 @@ Configuration of routes, initializers, authentication (in future any other setti
 ### Initializers
 It's an section of configuration where user can initialize anything while server is starting
 For Example:
+
 ```initialize {
             HibernateSession.init(this)
         }```
 
 ### Routes
-Routes also described in the configuration
+Routes also described in the configuration:
+
 For Example:
+
  ```get("/assets/*file", AssetController.at)```
 
 ### Persistence
@@ -35,13 +38,14 @@ Now persistance layer based on Hibernate
 Hibernate session available from request object inside action
 
 ### Authentication
-It's made as extension of configuration DSL, request object and in future it will be extracted into plugin
+It's made as extension of configuration DSL, request object and in future it will be extracted into plugin:
 
-### View Templates
-It's just groovy templates.
         ```authenticated("/login") {
             get("/assets/*file", AssetController.at)
         }```
+
+### View Templates
+It's just groovy templates
 
 
 # Sample Application
